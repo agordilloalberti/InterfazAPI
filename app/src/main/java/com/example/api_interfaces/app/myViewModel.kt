@@ -98,9 +98,8 @@ class MyViewModel : ViewModel() {
 
     fun changeLogginResult(result: String) {
         _loginResult.value=result
-        if (_dismissed.value == true){
-            _dismissed.value = false
-        }
+        _dismissed.value = true
+        _dismissed.value = false
     }
 
     private val _registerResult = MutableLiveData("")
@@ -108,9 +107,7 @@ class MyViewModel : ViewModel() {
 
     fun changeRegisterResult(result: String) {
         _registerResult.value=result
-        if (_dismissed.value == true){
-            _dismissed.value = false
-        }
+        changeLogginResult("")
     }
 
     private val _token = MutableLiveData("")
@@ -125,6 +122,7 @@ class MyViewModel : ViewModel() {
                     _rol.value = JWT.decode(token.value).getClaim("roles").asString()
                     changeLogginResult("logged")
                 } else {
+                    _error.value = response.errorBody()?.string()
                     changeLogginResult("errorLogin")
                 }
             } catch (e: Exception) {
@@ -132,6 +130,10 @@ class MyViewModel : ViewModel() {
             }
         }
     }
+
+
+    private val _error = MutableLiveData("")
+    val error : LiveData<String> = _error
 
     fun register(
         username:String,
@@ -151,7 +153,7 @@ class MyViewModel : ViewModel() {
             name,
             surname,
             direccion = Direccion(calle, num, mun, prov, cp),
-            rol = "ROL_USER"
+            rol = "USER"
         )
         viewModelScope.launch {
             try {
@@ -160,7 +162,8 @@ class MyViewModel : ViewModel() {
                     changeRegisterResult("OK")
                     loginUser(username, password)
                 }else{
-                    changeRegisterResult("Not OK\nError:\n${response.errorBody()}")
+                    _error.value = response.errorBody()?.string()
+                    changeRegisterResult("Not OK")
                 }
             }catch (e:Exception){
                 changeRegisterResult(e.message!!)
@@ -180,14 +183,8 @@ class MyViewModel : ViewModel() {
     }
 
     private fun checkComponents(screen: String) : List<String>{
-        var list = listOf<String>()
+        val list = listOf<String>()
         when (screen) {
-            "login" -> {
-                list= listOf("username","password")
-            }
-            "register" -> {
-                listOf("username","password","passRep","name","surname","rol","calle","num","mun","prov","cp")
-            }
             "insertSelf" -> {
                 listOf("name","descrip")
             }

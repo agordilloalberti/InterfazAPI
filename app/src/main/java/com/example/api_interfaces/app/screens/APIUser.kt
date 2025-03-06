@@ -34,8 +34,7 @@ fun APIUser(navControlador: NavHostController, modifier: Modifier, viewModel: My
     val prov by viewModel.prov.observeAsState("")
     val cp by viewModel.cp.observeAsState("")
     val screen by viewModel.screen.observeAsState("")
-    val token by viewModel.token.observeAsState("")
-    val resgisterResult by viewModel.registerResult.observeAsState("")
+    val registerResult by viewModel.registerResult.observeAsState("")
     val logged by viewModel.loginResult.observeAsState("")
     val dismissed by viewModel.dismissed.observeAsState(false)
 
@@ -68,14 +67,14 @@ fun APIUser(navControlador: NavHostController, modifier: Modifier, viewModel: My
                 item {
                     AddAlertDialog(
                         "Login result",
-                        "Login correcto, bienvenido$username"
+                        "Login correcto, bienvenido \"$username\""
                     ) { viewModel.dismiss(); viewModel.changeLogginResult("") }
                 }
             } else if (logged == "errorLogin" && !dismissed) {
                 item {
                     AddAlertDialog(
                         "Login result",
-                        "Login fallido"
+                        "Login fallido\n${viewModel.error.value}"
                     ) { viewModel.dismiss(); viewModel.changeLogginResult("") }
                 }
             } else if (logged == "error" && !dismissed) {
@@ -149,24 +148,22 @@ fun APIUser(navControlador: NavHostController, modifier: Modifier, viewModel: My
                 }
             }
 
-            if (resgisterResult == "ok" && !dismissed) {
+            if (registerResult == "OK" && !dismissed) {
                 item {
                     AddAlertDialog(
                         "Register result",
-                        "Registro correcto, bienvenido $username"
+                        "Registro correcto, bienvenido \"$username\""
                     ) {
-                        viewModel.dismiss(); viewModel.changeLogginResult("");viewModel.changeRegisterResult(
-                        ""
-                    )
+                        viewModel.dismiss();viewModel.changeRegisterResult("")
                     }
                 }
-            } else if (resgisterResult != "OK" && !dismissed) {
+            } else if (registerResult == "Not OK" && !dismissed) {
                 item {
                     AddAlertDialog(
                         "Register result",
-                        "Registro fallido"
+                        "Registro fallido\n${viewModel.error.value}"
                     ) {
-                        viewModel.dismiss(); viewModel.changeLogginResult("");viewModel.changeRegisterResult("")
+                        viewModel.dismiss(); viewModel.changeRegisterResult("")
                     }
                 }
             }
