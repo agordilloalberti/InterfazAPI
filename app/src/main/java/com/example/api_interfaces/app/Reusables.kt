@@ -88,9 +88,9 @@ fun Footer(modifier: Modifier){
 }
 
 @Composable
-fun AddPlainText(text:String){
+fun AddPlainText(text:String,modifier: Modifier =Modifier){
     TextField(
-        modifier = Modifier.fillMaxWidth().wrapContentHeight().padding(0.dp,10.dp,0.dp,10.dp),
+        modifier = modifier.fillMaxWidth().wrapContentHeight().padding(0.dp,10.dp,0.dp,10.dp),
         value = text,
         readOnly = true,
         enabled = false,
@@ -103,10 +103,11 @@ fun AddPlainText(text:String){
 }
 
 @Composable
-fun AddButton(text:String,modifier: Modifier=Modifier,onclick: () -> Unit = {}){
+fun AddButton(text:String,modifier: Modifier=Modifier,enabled: Boolean=true,onclick: () -> Unit = {}){
     Button(
         border = BorderStroke(1.dp, colorResource(R.color.app)),
         modifier = modifier.padding(10.dp),
+        enabled = enabled,
         shape = RectangleShape,
         colors = ButtonDefaults.buttonColors(
             contentColor = Color.White,

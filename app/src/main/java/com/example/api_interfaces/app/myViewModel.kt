@@ -8,10 +8,24 @@ import com.auth0.jwt.JWT
 import com.example.api_interfaces.app.api.RetrofitClient
 import com.example.api_interfaces.app.api.dtos.Direccion
 import com.example.api_interfaces.app.api.dtos.LoginUsuarioDTO
+import com.example.api_interfaces.app.api.dtos.TareaAddADTO
+import com.example.api_interfaces.app.api.dtos.TareaAddSDTO
 import com.example.api_interfaces.app.api.dtos.UsuarioRegisterDTO
 import kotlinx.coroutines.launch
 
 class MyViewModel : ViewModel() {
+
+    private val _tName = MutableLiveData<String>()
+    val tName : LiveData<String> = _tName
+
+    private val _tNName = MutableLiveData<String>()
+    val tNName : LiveData<String> = _tNName
+
+    private val _desc = MutableLiveData<String>()
+    val desc : LiveData<String> = _desc
+
+    private val _tUsername = MutableLiveData<String>()
+    val tUsername : LiveData<String> = _tUsername
 
     private val _username = MutableLiveData("")
     val username: LiveData<String> = _username
@@ -90,7 +104,11 @@ class MyViewModel : ViewModel() {
     }
 
     fun dismiss() {
-        _dismissed.value = !_dismissed.value!!
+        _dismissed.value = true
+        viewModelScope.launch {
+            kotlinx.coroutines.delay(100)
+            _dismissed.value = false
+        }
     }
 
     private val _loginResult = MutableLiveData("notlogged")
@@ -113,6 +131,9 @@ class MyViewModel : ViewModel() {
     private val _token = MutableLiveData("")
     val token: LiveData<String> = _token
 
+    private val _error = MutableLiveData("")
+    val error : LiveData<String> = _error
+
     fun loginUser(username: String, password: String) {
         viewModelScope.launch {
             try {
@@ -126,14 +147,11 @@ class MyViewModel : ViewModel() {
                     changeLogginResult("errorLogin")
                 }
             } catch (e: Exception) {
+                _error.value = e.message
                 changeLogginResult("error")
             }
         }
     }
-
-
-    private val _error = MutableLiveData("")
-    val error : LiveData<String> = _error
 
     fun register(
         username:String,
@@ -166,7 +184,245 @@ class MyViewModel : ViewModel() {
                     changeRegisterResult("Not OK")
                 }
             }catch (e:Exception){
-                changeRegisterResult(e.message!!)
+                _error.value = e.message
+                changeRegisterResult("Not OK")
+            }
+        }
+    }
+
+    private val _opRes = MutableLiveData<MutableList<String>>()
+    val opRes : LiveData<MutableList<String>> = _opRes
+
+    fun insertTareaN(tarea:TareaAddSDTO,token:String){
+        viewModelScope.launch {
+            try {
+                val response = RetrofitClient.api.insertN(tarea,token)
+                if (response.isSuccessful) {
+                    _opRes.value= response.body()?.message as MutableList<String>?
+                    _opRes.value!!.add("OK")
+                } else {
+                    _opRes.value= mutableListOf("Error")
+                    _error.value = response.errorBody()?.string()
+                }
+            } catch (e: Exception) {
+                _error.value = e.message
+
+            }
+        }
+    }
+
+    fun insertTareaA(tarea: TareaAddADTO, token:String){
+        viewModelScope.launch {
+            try {
+                val response = RetrofitClient.api.insertA(tarea,token)
+                if (response.isSuccessful) {
+                    _opRes.value= response.body()?.message as MutableList<String>?
+                    _opRes.value!!.add("OK")
+                } else {
+                    _opRes.value= mutableListOf("Error")
+                    _error.value = response.errorBody()?.string()
+                }
+            } catch (e: Exception) {
+                _error.value = e.message
+
+            }
+        }
+    }
+
+    fun getTareaN(token: String){
+        viewModelScope.launch {
+            try {
+                val response = RetrofitClient.api.getN(token)
+                if (response.isSuccessful) {
+                    _opRes.value= response.body()?.message as MutableList<String>?
+                    _opRes.value!!.add("OK")
+                } else {
+                    _opRes.value= mutableListOf("Error")
+                    _error.value = response.errorBody()?.string()
+                }
+            } catch (e: Exception) {
+                _error.value = e.message
+
+            }
+        }
+    }
+
+    fun getTareaOtro(token: String,username: String){
+        viewModelScope.launch {
+            try {
+                val response = RetrofitClient.api.getOther(token,username)
+                if (response.isSuccessful) {
+                    _opRes.value= response.body()?.message as MutableList<String>?
+                    _opRes.value!!.add("OK")
+                } else {
+                    _opRes.value= mutableListOf("Error")
+                    _error.value = response.errorBody()?.string()
+                }
+            } catch (e: Exception) {
+                _error.value = e.message
+
+            }
+        }
+    }
+
+    fun getTareaA(token: String){
+        viewModelScope.launch {
+            try {
+                val response = RetrofitClient.api.getSelf(token)
+                if (response.isSuccessful) {
+                    _opRes.value= response.body()?.message as MutableList<String>?
+                    _opRes.value!!.add("OK")
+                } else {
+                    _opRes.value= mutableListOf("Error")
+                    _error.value = response.errorBody()?.string()
+                }
+            } catch (e: Exception) {
+                _error.value = e.message
+
+            }
+        }
+    }
+
+    fun updateTareaN(token: String,tarea:String,newTarea:TareaAddSDTO){
+        viewModelScope.launch {
+            try {
+                val response = RetrofitClient.api.updateN(token,tarea,newTarea)
+                if (response.isSuccessful) {
+                    _opRes.value= response.body()?.message as MutableList<String>?
+                    _opRes.value!!.add("OK")
+                } else {
+                    _opRes.value= mutableListOf("Error")
+                    _error.value = response.errorBody()?.string()
+                }
+            } catch (e: Exception) {
+                _error.value = e.message
+
+            }
+        }
+    }
+
+    fun updateTareaA(token: String,tarea:String,newTarea:TareaAddADTO){
+        viewModelScope.launch {
+            try {
+                val response = RetrofitClient.api.updateA(token,tarea,newTarea)
+                if (response.isSuccessful) {
+                    _opRes.value= response.body()?.message as MutableList<String>?
+                    _opRes.value!!.add("OK")
+                } else {
+                    _opRes.value= mutableListOf("Error")
+                    _error.value = response.errorBody()?.string()
+                }
+            } catch (e: Exception) {
+                _error.value = e.message
+
+            }
+        }
+    }
+
+    fun completeTareaN(token: String,tarea: String){
+        viewModelScope.launch {
+            try {
+                val response = RetrofitClient.api.completeN(token,tarea)
+                if (response.isSuccessful) {
+                    _opRes.value= response.body()?.message as MutableList<String>?
+                    _opRes.value!!.add("OK")
+                } else {
+                    _opRes.value= mutableListOf("Error")
+                    _error.value = response.errorBody()?.string()
+                }
+            } catch (e: Exception) {
+                _error.value = e.message
+
+            }
+        }
+    }
+
+    fun completeTareaA(token: String,tarea: String){
+        viewModelScope.launch {
+            try {
+                val response = RetrofitClient.api.completeA(token,tarea)
+                if (response.isSuccessful) {
+                    _opRes.value= response.body()?.message as MutableList<String>?
+                    _opRes.value!!.add("OK")
+                } else {
+                    _opRes.value= mutableListOf("Error")
+                    _error.value = response.errorBody()?.string()
+                }
+            } catch (e: Exception) {
+                _error.value = e.message
+
+            }
+        }
+    }
+
+    fun uncompleteTareaN(token: String,tarea: String){
+        viewModelScope.launch {
+            try {
+                val response = RetrofitClient.api.uncompleteN(token,tarea)
+                if (response.isSuccessful) {
+                    _opRes.value= response.body()?.message as MutableList<String>?
+                    _opRes.value!!.add("OK")
+                } else {
+                    _opRes.value= mutableListOf("Error")
+                    _error.value = response.errorBody()?.string()
+                }
+            } catch (e: Exception) {
+                _error.value = e.message
+
+            }
+        }
+    }
+
+    fun uncompleteTareaA(token: String,tarea: String){
+        viewModelScope.launch {
+            try {
+                val response = RetrofitClient.api.uncompleteA(token,tarea)
+                if (response.isSuccessful) {
+                    _opRes.value= response.body()?.message as MutableList<String>?
+                    _opRes.value!!.add("OK")
+                } else {
+                    _opRes.value= mutableListOf("Error")
+                    _error.value = response.errorBody()?.string()
+                }
+            } catch (e: Exception) {
+                _error.value = e.message
+
+            }
+        }
+    }
+
+    fun deleteTareaN(token: String,tarea: String){
+        viewModelScope.launch {
+            try {
+                val response = RetrofitClient.api.deleteN(token,tarea)
+                if (response.isSuccessful) {
+                    _opRes.value= response.body()?.message as MutableList<String>?
+                    _opRes.value!!.add("OK")
+                } else {
+                    _opRes.value= mutableListOf("Error")
+                    _error.value = response.errorBody()?.string()
+                }
+            } catch (e: Exception) {
+                _error.value = e.message
+
+            }
+        }
+    }
+
+    fun deleteTareaA(token: String,tarea: String){
+        viewModelScope.launch {
+            try {
+                val response = RetrofitClient.api.deleteA(token,tarea)
+                if (response.isSuccessful) {
+                    _opRes.value= response.body()?.message as MutableList<String>?
+                    _opRes.value!!.add("OK")
+                } else {
+                    _opRes.value= mutableListOf("Error")
+                    _error.value = response.errorBody()?.string()
+                }
+            } catch (e: Exception) {
+                _error.value = e.message
+
             }
         }
     }
@@ -185,13 +441,13 @@ class MyViewModel : ViewModel() {
     private fun checkComponents(screen: String) : List<String>{
         val list = listOf<String>()
         when (screen) {
-            "insertSelf" -> {
+            "insertN" -> {
                 listOf("name","descrip")
             }
             "insertA" -> {
                 listOf("name","descrip","username")
             }
-            "getSelf" -> {
+            "getN" -> {
                 listOf("getSelf")
             }
             "getA" -> {
@@ -240,5 +496,25 @@ class MyViewModel : ViewModel() {
         _muni.value=""
         _prov.value=""
         _cp.value=""
+    }
+
+    fun changeTName(new: String) {
+        _tName.value=new
+    }
+
+    fun changeTNName(it: String) {
+        _tNName.value=it
+    }
+
+    fun changeDes(it: String) {
+        _desc.value=it
+    }
+
+    fun changeUsername(it: String) {
+        _username.value=it
+    }
+
+    fun changeOpRes(s: String) {
+        _opRes.value= mutableListOf(s)
     }
 }
