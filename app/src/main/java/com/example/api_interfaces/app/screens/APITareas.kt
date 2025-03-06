@@ -58,6 +58,12 @@ fun APITareas(navControlador: NavController, modifier: Modifier, viewModel: MyVi
             AddButton("Descompletar tarea", enabled = rol=="ROLE_ADMIN") {navControlador.navigate(AppScreen.APITareasOperations.route);viewModel.changeScreen("uncompleteA")}
             AddButton("Borra tarea", enabled = rol=="ROLE_ADMIN") {navControlador.navigate(AppScreen.APITareasOperations.route);viewModel.changeScreen("deleteA")}
         }
+
+        AddButton("Volver") {
+            navControlador.navigate(AppScreen.APIMenu.route)
+            viewModel.changeUser("")
+            viewModel.reset()
+        }
     }
 
 }

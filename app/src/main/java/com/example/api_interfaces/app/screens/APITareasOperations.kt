@@ -24,14 +24,14 @@ fun APITareasOperations(
     modifier: Modifier,
     viewModel: MyViewModel
 ) {
-    val comps by viewModel.comps.observeAsState()
+    val comps by viewModel.comps.observeAsState(listOf(""))
     val tName by viewModel.tName.observeAsState("")
     val tNName by viewModel.tNName.observeAsState("")
     val desc by viewModel.desc.observeAsState("")
     val username by viewModel.tUsername.observeAsState("")
     val screen by viewModel.screen.observeAsState("")
     val token by viewModel.token.observeAsState("")
-    val opRes by viewModel.opRes.observeAsState(listOf())
+    val opRes by viewModel.opRes.observeAsState(listOf(""))
     val error by viewModel.error.observeAsState("")
     val dismissed by viewModel.dismissed.observeAsState(false)
 
@@ -46,22 +46,22 @@ fun APITareasOperations(
             AddAlertDialog("Result",opRes.toString()) {viewModel.dismiss();viewModel.changeOpRes("")}
         }
 
-        if (comps!!.contains("name")) {
+        if (comps.contains("name")) {
             AddPlainText("Nombre de la tarea")
             AddTextField("Nombre", tName, { viewModel.changeTName(it) })
         }
 
-        if (comps!!.contains("newName")) {
+        if (comps.contains("newName")) {
             AddPlainText("Nuevo nombre de la tarea")
             AddTextField("Nuevo nombre", tNName, { viewModel.changeTNName(it) })
         }
 
-        if (comps!!.contains("descrip")) {
+        if (comps.contains("descrip")) {
             AddPlainText("Descripción de la tarea")
             AddTextField("Descripción", desc, { viewModel.changeDes(it) })
         }
 
-        if (comps!!.contains("username")) {
+        if (comps.contains("username")) {
             AddPlainText("Nombre del usuario\nSi se deja vacio se usara el nombre del usuario actual")
             AddTextField("Username", username, { viewModel.changeUsername(it) })
         }
