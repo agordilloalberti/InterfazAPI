@@ -6,4 +6,5 @@ open class AppScreen(val route: String) {
     data object APIMenu: AppScreen("APIMenu")
     data object APIUser: AppScreen("APIUser")
     data object APITareas : AppScreen("APITareas")
+    data object APITareasOperations : AppScreen("APITareasOperations")
 }

@@ -47,12 +47,14 @@ fun APIUser(navControlador: NavHostController, modifier: Modifier, viewModel: My
     ) {
         if (screen == "login") {
             item { AddPlainText("LOGIN DE USUARIO") }
+            item { AddPlainText("Nombre de usuario") }
             item {
                 AddTextField(
                     "Escriba su nombre de usuario",
                     username,
                     { viewModel.changeUser(it) })
             }
+            item { AddPlainText("Contraseña") }
             item {
                 AddTextField(
                     "Escriba su contraseña",
@@ -61,7 +63,7 @@ fun APIUser(navControlador: NavHostController, modifier: Modifier, viewModel: My
                     transformation = PasswordVisualTransformation()
                 )
             }
-            item { AddButton("Logg in") { viewModel.loginUser(username, password) } }
+            item { AddButton("Log in") { viewModel.loginUser(username, password) } }
 
             if (logged == "logged" && !dismissed) {
                 item {
@@ -81,7 +83,7 @@ fun APIUser(navControlador: NavHostController, modifier: Modifier, viewModel: My
                 item {
                     AddAlertDialog(
                         "Login result",
-                        "Error interno"
+                        "Error interno\n${viewModel.error.value}"
                     ) { viewModel.dismiss(); viewModel.changeLogginResult("") }
                 }
             }
@@ -95,12 +97,14 @@ fun APIUser(navControlador: NavHostController, modifier: Modifier, viewModel: My
             }
         } else if (screen == "register") {
             item { AddPlainText("REGISTRO DE USUARIO") }
+            item { AddPlainText("Nombre de usuario") }
             item {
                 AddTextField(
                     "Escriba su nombre de usuario",
                     username,
                     { viewModel.changeUser(it) })
             }
+            item { AddPlainText("Contraseña") }
             item {
                 AddTextField(
                     "Escriba su contraseña",
@@ -109,6 +113,7 @@ fun APIUser(navControlador: NavHostController, modifier: Modifier, viewModel: My
                     transformation = PasswordVisualTransformation()
                 )
             }
+            item { AddPlainText("Repetir contraseña") }
             item {
                 AddTextField(
                     "Repita su contraseña",
@@ -117,15 +122,22 @@ fun APIUser(navControlador: NavHostController, modifier: Modifier, viewModel: My
                     transformation = PasswordVisualTransformation()
                 )
             }
+            item { AddPlainText("Nombre") }
             item { AddTextField("Escriba su nombre", name, { viewModel.changeName(it) }) }
+            item { AddPlainText("Apellido/s") }
             item { AddTextField("Escriba su apellido/s", surname, { viewModel.changeSurname(it) }) }
+            item { AddPlainText("Calle") }
             item { AddTextField("Escriba su calle", calle, { viewModel.changeCalle(it) }) }
+            item { AddPlainText("Número") }
             item { AddTextField("Escriba su numero", num, { viewModel.changeNum(it) }) }
+            item { AddPlainText("Municipio") }
             item { AddTextField("Escriba su municipio", muni, { viewModel.changeMuni(it) }) }
+            item { AddPlainText("Provincia") }
             item { AddTextField("Escriba su provincia", prov, { viewModel.changeProv(it) }) }
+            item { AddPlainText("Código postal") }
             item { AddTextField("Escriba su código postal", cp, { viewModel.changeCP(it) }) }
             item {
-                AddButton("Registrar") {
+                AddButton("Registrarse") {
                     viewModel.register(
                         username,
                         password,

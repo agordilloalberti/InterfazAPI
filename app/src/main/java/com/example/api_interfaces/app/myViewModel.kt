@@ -90,7 +90,11 @@ class MyViewModel : ViewModel() {
     }
 
     fun dismiss() {
-        _dismissed.value = !_dismissed.value!!
+        _dismissed.value = true
+        viewModelScope.launch {
+            kotlinx.coroutines.delay(100)
+            _dismissed.value = false
+        }
     }
 
     private val _loginResult = MutableLiveData("notlogged")
@@ -126,6 +130,7 @@ class MyViewModel : ViewModel() {
                     changeLogginResult("errorLogin")
                 }
             } catch (e: Exception) {
+                _error.value = e.message
                 changeLogginResult("error")
             }
         }
@@ -166,7 +171,8 @@ class MyViewModel : ViewModel() {
                     changeRegisterResult("Not OK")
                 }
             }catch (e:Exception){
-                changeRegisterResult(e.message!!)
+                _error.value = e.message
+                changeRegisterResult("Not OK")
             }
         }
     }
@@ -185,13 +191,13 @@ class MyViewModel : ViewModel() {
     private fun checkComponents(screen: String) : List<String>{
         val list = listOf<String>()
         when (screen) {
-            "insertSelf" -> {
+            "insertN" -> {
                 listOf("name","descrip")
             }
             "insertA" -> {
                 listOf("name","descrip","username")
             }
-            "getSelf" -> {
+            "getN" -> {
                 listOf("getSelf")
             }
             "getA" -> {

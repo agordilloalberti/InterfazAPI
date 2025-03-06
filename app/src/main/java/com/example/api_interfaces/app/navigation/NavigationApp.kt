@@ -7,6 +7,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.api_interfaces.app.MyViewModel
 import com.example.api_interfaces.app.screens.APIMenu
 import com.example.api_interfaces.app.screens.APITareas
+import com.example.api_interfaces.app.screens.APITareasOperations
 import com.example.api_interfaces.app.screens.APIUser
 import com.example.api_interfaces.app.screens.MainScreen
 import com.example.api_interfaces.app.screens.Portada
@@ -30,6 +31,8 @@ fun AppNavigation(modifier: Modifier, viewModel: MyViewModel) {
         composable(AppScreen.APITareas.route){
             APITareas(navControlador,modifier,viewModel)
         }
-
+        composable(AppScreen.APITareasOperations.route){
+            APITareasOperations(navControlador,modifier,viewModel)
+        }
     }
 }
