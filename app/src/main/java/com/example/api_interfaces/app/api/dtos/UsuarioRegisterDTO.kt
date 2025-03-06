@@ -1,7 +1,5 @@
 package com.example.api_interfaces.app.api.dtos
 
-import com.example.api_interfaces.app.api.Direccion
-
 data class UsuarioRegisterDTO(
     val username: String,
     val password: String,

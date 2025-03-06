@@ -38,17 +38,17 @@ private fun Body(navControlador: NavController, modifier: Modifier, viewModel: M
         modifier = modifier
             .background(Color.Black)
             .fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
+        verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            AddButton("Login") { navControlador.navigate(AppScreen.APIUser.route); viewModel.changeScreen("login") }
-            AddButton("Registrar usuario") { navControlador.navigate(AppScreen.APIUser.route); viewModel.changeScreen("register") }
+        Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+            AddButton("Login",Modifier.weight(1f)) { navControlador.navigate(AppScreen.APIUser.route); viewModel.changeScreen("login") }
+            AddButton("Registrar usuario",Modifier.weight(1f)) { navControlador.navigate(AppScreen.APIUser.route); viewModel.changeScreen("register") }
         }
-        Spacer(modifier = Modifier.height(8.dp))
-        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            AddButton("Gestionar tareas") { navControlador.navigate(AppScreen.APITareas.route) }
-            AddButton("Volver") { navControlador.navigate(AppScreen.MainScreen.route) }
+        Spacer(modifier = Modifier.height(15.dp))
+        Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+            AddButton("Gestionar tareas",Modifier.weight(1f)) { navControlador.navigate(AppScreen.APITareas.route) }
+            AddButton("Volver",Modifier.weight(1f)) { navControlador.navigate(AppScreen.MainScreen.route) }
         }
     }
 }

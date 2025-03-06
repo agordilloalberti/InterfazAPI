@@ -1,4 +1,4 @@
-package com.example.api_interfaces.app.api
+package com.example.api_interfaces.app.api.dtos
 
 data class Direccion(
     val calle: String,

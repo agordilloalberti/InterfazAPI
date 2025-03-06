@@ -5,8 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.auth0.jwt.JWT
-import com.example.api_interfaces.app.api.Direccion
 import com.example.api_interfaces.app.api.RetrofitClient
+import com.example.api_interfaces.app.api.dtos.Direccion
 import com.example.api_interfaces.app.api.dtos.LoginUsuarioDTO
 import com.example.api_interfaces.app.api.dtos.UsuarioRegisterDTO
 import kotlinx.coroutines.launch
