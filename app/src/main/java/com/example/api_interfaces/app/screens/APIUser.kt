@@ -35,6 +35,7 @@ fun APIUser(navControlador: NavHostController, modifier: Modifier, viewModel: My
     val cp by viewModel.cp.observeAsState("")
     val screen by viewModel.screen.observeAsState("")
     val token by viewModel.token.observeAsState("")
+    val resgisterResult by viewModel.registerResult.observeAsState("")
     val logged by viewModel.loginResult.observeAsState("")
     val dismissed by viewModel.dismissed.observeAsState(false)
 
@@ -47,7 +48,12 @@ fun APIUser(navControlador: NavHostController, modifier: Modifier, viewModel: My
     ) {
         if (screen == "login") {
             item { AddPlainText("LOGIN DE USUARIO") }
-            item { AddTextField("Escriba su nombre de usuario", username, { viewModel.changeUser(it) }) }
+            item {
+                AddTextField(
+                    "Escriba su nombre de usuario",
+                    username,
+                    { viewModel.changeUser(it) })
+            }
             item {
                 AddTextField(
                     "Escriba su contraseña",
@@ -62,7 +68,7 @@ fun APIUser(navControlador: NavHostController, modifier: Modifier, viewModel: My
                 item {
                     AddAlertDialog(
                         "Login result",
-                        "Login correcto: \ntoken:\n$token"
+                        "Login correcto, bienvenido$username"
                     ) { viewModel.dismiss(); viewModel.changeLogginResult("") }
                 }
             } else if (logged == "errorLogin" && !dismissed) {
@@ -90,7 +96,12 @@ fun APIUser(navControlador: NavHostController, modifier: Modifier, viewModel: My
             }
         } else if (screen == "register") {
             item { AddPlainText("REGISTRO DE USUARIO") }
-            item { AddTextField("Escriba su nombre de usuario", username, { viewModel.changeUser(it) }) }
+            item {
+                AddTextField(
+                    "Escriba su nombre de usuario",
+                    username,
+                    { viewModel.changeUser(it) })
+            }
             item {
                 AddTextField(
                     "Escriba su contraseña",
@@ -116,7 +127,18 @@ fun APIUser(navControlador: NavHostController, modifier: Modifier, viewModel: My
             item { AddTextField("Escriba su código postal", cp, { viewModel.changeCP(it) }) }
             item {
                 AddButton("Registrar") {
-                    viewModel.register(username, password, passwordRep, name, surname, calle, num, prov, muni, cp)
+                    viewModel.register(
+                        username,
+                        password,
+                        passwordRep,
+                        name,
+                        surname,
+                        calle,
+                        num,
+                        prov,
+                        muni,
+                        cp
+                    )
                 }
             }
             item {
@@ -124,6 +146,28 @@ fun APIUser(navControlador: NavHostController, modifier: Modifier, viewModel: My
                     navControlador.navigate(AppScreen.APIMenu.route)
                     viewModel.changeUser("")
                     viewModel.reset()
+                }
+            }
+
+            if (resgisterResult == "ok" && !dismissed) {
+                item {
+                    AddAlertDialog(
+                        "Register result",
+                        "Registro correcto, bienvenido $username"
+                    ) {
+                        viewModel.dismiss(); viewModel.changeLogginResult("");viewModel.changeRegisterResult(
+                        ""
+                    )
+                    }
+                }
+            } else if (resgisterResult != "OK" && !dismissed) {
+                item {
+                    AddAlertDialog(
+                        "Register result",
+                        "Registro fallido"
+                    ) {
+                        viewModel.dismiss(); viewModel.changeLogginResult("");viewModel.changeRegisterResult("")
+                    }
                 }
             }
         }

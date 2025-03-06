@@ -106,7 +106,7 @@ class MyViewModel : ViewModel() {
     private val _registerResult = MutableLiveData("")
     val registerResult:LiveData<String> = _registerResult
 
-    private fun changeRegisterResult(result: String) {
+    fun changeRegisterResult(result: String) {
         _registerResult.value=result
         if (_dismissed.value == true){
             _dismissed.value = false
@@ -158,6 +158,7 @@ class MyViewModel : ViewModel() {
                 val response = RetrofitClient.api.register(usuario)
                 if (response.isSuccessful){
                     changeRegisterResult("OK")
+                    loginUser(username, password)
                 }else{
                     changeRegisterResult("Not OK\nError:\n${response.errorBody()}")
                 }
