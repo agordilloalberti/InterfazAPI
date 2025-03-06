@@ -16,6 +16,7 @@ import com.example.api_interfaces.app.AddTextField
 import com.example.api_interfaces.app.MyViewModel
 import com.example.api_interfaces.app.api.dtos.TareaAddADTO
 import com.example.api_interfaces.app.api.dtos.TareaAddSDTO
+import com.example.api_interfaces.app.navigation.AppScreen
 
 @Composable
 fun APITareasOperations(
@@ -94,6 +95,11 @@ fun APITareasOperations(
             }else if (screen=="deleteA"){
                 viewModel.deleteTareaA(token,tName)
             }
+        }
+        AddButton("Volver") {
+            navControlador.navigate(AppScreen.APIMenu.route)
+            viewModel.changeUser("")
+            viewModel.reset()
         }
     }
 }
