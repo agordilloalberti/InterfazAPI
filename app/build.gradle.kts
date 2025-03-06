@@ -79,5 +79,8 @@ dependencies {
     implementation(libs.retrofit2.retrofit)
     implementation(libs.jetbrains.kotlinx.coroutines.android)
     implementation(libs.java.jwt)
+    implementation(libs.accompanist.systemuicontroller)
+
+
 
 }

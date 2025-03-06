@@ -106,8 +106,11 @@ class MyViewModel : ViewModel() {
     private val _registerResult = MutableLiveData("")
     val registerResult:LiveData<String> = _registerResult
 
-    fun changeRegisterResult(result: String) {
+    private fun changeRegisterResult(result: String) {
         _registerResult.value=result
+        if (_dismissed.value == true){
+            _dismissed.value = false
+        }
     }
 
     private val _token = MutableLiveData("")
@@ -156,7 +159,7 @@ class MyViewModel : ViewModel() {
                 if (response.isSuccessful){
                     changeRegisterResult("OK")
                 }else{
-                    changeRegisterResult("Not OK")
+                    changeRegisterResult("Not OK\nError:\n${response.errorBody()}")
                 }
             }catch (e:Exception){
                 changeRegisterResult(e.message!!)
@@ -164,15 +167,15 @@ class MyViewModel : ViewModel() {
         }
     }
 
-    private val _comps = MutableLiveData(mutableListOf<String>())
-    val comps: LiveData<MutableList<String>> = _comps
+    private val _comps = MutableLiveData(listOf<String>())
+    val comps: LiveData<List<String>> = _comps
 
     private val _screen = MutableLiveData("")
     val screen : LiveData<String> = _screen
 
     fun changeScreen(screen: String){
         _screen.value=screen
-        val comp = checkComponents(screen)
+        _comps.value = checkComponents(screen)
     }
 
     private fun checkComponents(screen: String) : List<String>{
