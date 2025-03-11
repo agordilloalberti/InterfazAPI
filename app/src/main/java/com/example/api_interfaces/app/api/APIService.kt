@@ -4,7 +4,7 @@ import com.example.api_interfaces.app.api.dtos.LoginResponse
 import com.example.api_interfaces.app.api.dtos.LoginUsuarioDTO
 import com.example.api_interfaces.app.api.dtos.NormalResponse
 import com.example.api_interfaces.app.api.dtos.TareaAddADTO
-import com.example.api_interfaces.app.api.dtos.TareaAddSDTO
+import com.example.api_interfaces.app.api.dtos.TareaAddNDTO
 import com.example.api_interfaces.app.api.dtos.UsuarioRegisterDTO
 import retrofit2.Response
 import retrofit2.http.Body
@@ -31,7 +31,7 @@ interface APIService {
 
     @POST("Tareas/insert")
     suspend fun insertN(
-        @Body tarea: TareaAddSDTO,
+        @Body tarea: TareaAddNDTO,
         @Header("Authorization") token: String
     ): Response<NormalResponse>
 
@@ -67,7 +67,7 @@ interface APIService {
     suspend fun updateN(
         @Header("Authorization") token: String,
         @Path("tarea") tarea: String,
-        @Body tareaAdd: TareaAddSDTO
+        @Body tareaAdd: TareaAddNDTO
     ): Response<NormalResponse>
 
     @PUT("TareasAdmin/{tarea}")

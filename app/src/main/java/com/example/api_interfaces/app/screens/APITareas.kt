@@ -31,32 +31,88 @@ fun APITareas(navControlador: NavController, modifier: Modifier, viewModel: MyVi
         AddAlertDialog("Error","Debes estar logeado para acceder a estas funciones") {viewModel.dismiss();navControlador.navigate(AppScreen.APIMenu.route)}
     }
 
-    Row(modifier.fillMaxSize().background(Color.Black)){
-        Column(Modifier.weight(1f)){
-            AddPlainText("NORMAL USER")
-            AddButton("Insertar tarea") {navControlador.navigate(AppScreen.APITareasOperations.route);viewModel.changeScreen("insertN")}
-            AddButton("Obtener tarea") {navControlador.navigate(AppScreen.APITareasOperations.route);viewModel.changeScreen("getN")}
-            AddButton("Actualizar tarea") {navControlador.navigate(AppScreen.APITareasOperations.route);viewModel.changeScreen("updateN")}
-            AddButton("Completar tarea") {navControlador.navigate(AppScreen.APITareasOperations.route);viewModel.changeScreen("completeN")}
-            AddButton("Descompletar tarea") {navControlador.navigate(AppScreen.APITareasOperations.route);viewModel.changeScreen("uncompleteN")}
-            AddButton("Borra tarea") {navControlador.navigate(AppScreen.APITareasOperations.route);viewModel.changeScreen("deleteN")}
-        }
+    Column(modifier.fillMaxSize().background(Color.Black)){
+        Row() {
+            Column(Modifier.weight(1f)) {
+                AddPlainText("NORMAL USER")
+                AddButton("Insertar tarea") {
+                    navControlador.navigate(AppScreen.APITareasOperations.route);viewModel.changeScreen(
+                    "insertN"
+                )
+                }
+                AddButton("Obtener tarea") {
+                    navControlador.navigate(AppScreen.APITareasOperations.route);viewModel.changeScreen(
+                    "getN"
+                )
+                }
+                AddButton("Actualizar tarea") {
+                    navControlador.navigate(AppScreen.APITareasOperations.route);viewModel.changeScreen(
+                    "updateN"
+                )
+                }
+                AddButton("Completar tarea") {
+                    navControlador.navigate(AppScreen.APITareasOperations.route);viewModel.changeScreen(
+                    "completeN"
+                )
+                }
+                AddButton("Descompletar tarea") {
+                    navControlador.navigate(AppScreen.APITareasOperations.route);viewModel.changeScreen(
+                    "uncompleteN"
+                )
+                }
+                AddButton("Borra tarea") {
+                    navControlador.navigate(AppScreen.APITareasOperations.route);viewModel.changeScreen(
+                    "deleteN"
+                )
+                }
+            }
 
-        VerticalDivider(
-            modifier = Modifier
-                .fillMaxHeight()
-                .width(1.dp),
-            color = Color.White
-        )
+            VerticalDivider(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .width(1.dp),
+                color = Color.White
+            )
 
-        Column(Modifier.weight(1f)){
-            AddPlainText("ADMIN USER")
-            AddButton("Insertar tarea", enabled = rol=="ROLE_ADMIN") {navControlador.navigate(AppScreen.APITareasOperations.route);viewModel.changeScreen("insertA")}
-            AddButton("Obtener tarea de usuario", enabled = rol=="ROLE_ADMIN") {navControlador.navigate(AppScreen.APITareasOperations.route);viewModel.changeScreen("getA")}
-            AddButton("Actualizar tarea", enabled = rol=="ROLE_ADMIN") {navControlador.navigate(AppScreen.APITareasOperations.route);viewModel.changeScreen("updateA")}
-            AddButton("Completar tarea", enabled = rol=="ROLE_ADMIN") {navControlador.navigate(AppScreen.APITareasOperations.route);viewModel.changeScreen("completeA")}
-            AddButton("Descompletar tarea", enabled = rol=="ROLE_ADMIN") {navControlador.navigate(AppScreen.APITareasOperations.route);viewModel.changeScreen("uncompleteA")}
-            AddButton("Borra tarea", enabled = rol=="ROLE_ADMIN") {navControlador.navigate(AppScreen.APITareasOperations.route);viewModel.changeScreen("deleteA")}
+            Column(Modifier.weight(1f)) {
+                AddPlainText("ADMIN USER")
+                AddButton("Insertar tarea", enabled = rol == "ROLE_ADMIN") {
+                    navControlador.navigate(
+                        AppScreen.APITareasOperations.route
+                    );viewModel.changeScreen("insertA")
+                }
+                AddButton(
+                    "Obtener tarea de usuario",
+                    enabled = rol == "ROLE_ADMIN"
+                ) {
+                    navControlador.navigate(AppScreen.APITareasOperations.route);viewModel.changeScreen(
+                    "getA"
+                )
+                }
+                AddButton("Actualizar tarea", enabled = rol == "ROLE_ADMIN") {
+                    navControlador.navigate(
+                        AppScreen.APITareasOperations.route
+                    );viewModel.changeScreen("updateA")
+                }
+                AddButton("Completar tarea", enabled = rol == "ROLE_ADMIN") {
+                    navControlador.navigate(
+                        AppScreen.APITareasOperations.route
+                    );viewModel.changeScreen("completeA")
+                }
+                AddButton(
+                    "Descompletar tarea",
+                    enabled = rol == "ROLE_ADMIN"
+                ) {
+                    navControlador.navigate(AppScreen.APITareasOperations.route);viewModel.changeScreen(
+                    "uncompleteA"
+                )
+                }
+                AddButton("Borra tarea", enabled = rol == "ROLE_ADMIN") {
+                    navControlador.navigate(
+                        AppScreen.APITareasOperations.route
+                    );viewModel.changeScreen("deleteA")
+                }
+            }
         }
 
         AddButton("Volver") {
@@ -64,6 +120,7 @@ fun APITareas(navControlador: NavController, modifier: Modifier, viewModel: MyVi
             viewModel.changeUser("")
             viewModel.reset()
         }
+
     }
 
 }

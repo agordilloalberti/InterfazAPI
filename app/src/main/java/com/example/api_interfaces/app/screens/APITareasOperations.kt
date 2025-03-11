@@ -15,7 +15,7 @@ import com.example.api_interfaces.app.AddPlainText
 import com.example.api_interfaces.app.AddTextField
 import com.example.api_interfaces.app.MyViewModel
 import com.example.api_interfaces.app.api.dtos.TareaAddADTO
-import com.example.api_interfaces.app.api.dtos.TareaAddSDTO
+import com.example.api_interfaces.app.api.dtos.TareaAddNDTO
 import com.example.api_interfaces.app.navigation.AppScreen
 
 @Composable
@@ -40,7 +40,7 @@ fun APITareasOperations(
         .background(Color.Black)) {
         AddPlainText("Operación: $screen")
 
-        if (opRes[0] =="Error" && !dismissed){
+        if ((opRes.isEmpty() || opRes[0] =="Error") && !dismissed){
             AddAlertDialog("Error",error) {viewModel.dismiss();viewModel.changeOpRes("")}
         }else if(opRes.contains("OK")){
             AddAlertDialog("Result",opRes.toString()) {viewModel.dismiss();viewModel.changeOpRes("")}
@@ -63,13 +63,13 @@ fun APITareasOperations(
 
         if (comps.contains("username")) {
             AddPlainText("Nombre del usuario\nSi se deja vacio se usara el nombre del usuario actual")
-            AddTextField("Username", username, { viewModel.changeUsername(it) })
+            AddTextField("Username", username, { viewModel.changeTusername(it) })
         }
 
         AddButton("Confirmar operación $screen")
         {
             if (screen=="insertN") {
-                viewModel.insertTareaN(TareaAddSDTO(tName,desc),token)
+                viewModel.insertTareaN(TareaAddNDTO(tName,desc),token)
             }else if (screen=="insertA"){
                 viewModel.insertTareaA(TareaAddADTO(tName,desc,username),token)
             }else if(screen=="getN"){
@@ -79,7 +79,7 @@ fun APITareasOperations(
             }else if (screen=="getA") {
                 viewModel.getTareaOtro(token, username)
             }else if (screen=="updateN"){
-                viewModel.updateTareaN(token,tName,TareaAddSDTO(tNName,desc))
+                viewModel.updateTareaN(token,tName,TareaAddNDTO(tNName,desc))
             }else if(screen=="updateA"){
                 viewModel.updateTareaA(token,tName,(TareaAddADTO(tNName,desc,username)))
             }else if (screen=="completeN"){
@@ -98,7 +98,6 @@ fun APITareasOperations(
         }
         AddButton("Volver") {
             navControlador.navigate(AppScreen.APIMenu.route)
-            viewModel.changeUser("")
             viewModel.reset()
         }
     }

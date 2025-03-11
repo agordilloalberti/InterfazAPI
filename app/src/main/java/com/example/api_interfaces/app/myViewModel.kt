@@ -9,7 +9,7 @@ import com.example.api_interfaces.app.api.RetrofitClient
 import com.example.api_interfaces.app.api.dtos.Direccion
 import com.example.api_interfaces.app.api.dtos.LoginUsuarioDTO
 import com.example.api_interfaces.app.api.dtos.TareaAddADTO
-import com.example.api_interfaces.app.api.dtos.TareaAddSDTO
+import com.example.api_interfaces.app.api.dtos.TareaAddNDTO
 import com.example.api_interfaces.app.api.dtos.UsuarioRegisterDTO
 import kotlinx.coroutines.launch
 
@@ -193,7 +193,7 @@ class MyViewModel : ViewModel() {
     private val _opRes = MutableLiveData<MutableList<String>>()
     val opRes : LiveData<MutableList<String>> = _opRes
 
-    fun insertTareaN(tarea:TareaAddSDTO,token:String){
+    fun insertTareaN(tarea:TareaAddNDTO, token:String){
         viewModelScope.launch {
             try {
                 val response = RetrofitClient.api.insertN(tarea,token)
@@ -283,7 +283,7 @@ class MyViewModel : ViewModel() {
         }
     }
 
-    fun updateTareaN(token: String,tarea:String,newTarea:TareaAddSDTO){
+    fun updateTareaN(token: String,tarea:String,newTarea:TareaAddNDTO){
         viewModelScope.launch {
             try {
                 val response = RetrofitClient.api.updateN(token,tarea,newTarea)
@@ -438,51 +438,17 @@ class MyViewModel : ViewModel() {
         _comps.value = checkComponents(screen)
     }
 
-    private fun checkComponents(screen: String) : List<String>{
-        val list = listOf<String>()
-        when (screen) {
-            "insertN" -> {
-                listOf("name","descrip")
-            }
-            "insertA" -> {
-                listOf("name","descrip","username")
-            }
-            "getN" -> {
-                listOf("getSelf")
-            }
-            "getA" -> {
-                listOf("username")
-            }
-            "updateN" -> {
-                listOf("name","newName","descrip")
-            }
-            "updateA" -> {
-                listOf("name","newName","descrip","username")
-            }
-            "completeN" -> {
-                listOf("name")
-            }
-            "completeA" -> {
-                listOf("name")
-            }
-            "uncompleteN" -> {
-                listOf("name")
-            }
-            "uncompleteA" -> {
-                listOf("name")
-            }
-            "deleteN" -> {
-                listOf("name")
-            }
-            "deleteA" -> {
-                listOf("name")
-            }
-            else -> {
-                println("Error raro")
-            }
+    private fun checkComponents(screen: String): List<String> {
+        return when (screen) {
+            "insertN" -> listOf("name", "descrip")
+            "insertA" -> listOf("name", "descrip", "username")
+            "getN" -> listOf("getSelf")
+            "getA" -> listOf("username")
+            "updateN" -> listOf("name", "newName", "descrip")
+            "updateA" -> listOf("name", "newName", "descrip", "username")
+            "completeN", "completeA", "uncompleteN", "uncompleteA", "deleteN", "deleteA" -> listOf("name")
+            else -> emptyList()
         }
-
-        return list
     }
 
     fun reset(){
@@ -496,6 +462,10 @@ class MyViewModel : ViewModel() {
         _muni.value=""
         _prov.value=""
         _cp.value=""
+        _tName.value=""
+        _tNName.value=""
+        _tUsername.value=""
+        _desc.value=""
     }
 
     fun changeTName(new: String) {
@@ -510,8 +480,8 @@ class MyViewModel : ViewModel() {
         _desc.value=it
     }
 
-    fun changeUsername(it: String) {
-        _username.value=it
+    fun changeTusername(it: String) {
+        _tUsername.value=it
     }
 
     fun changeOpRes(s: String) {
