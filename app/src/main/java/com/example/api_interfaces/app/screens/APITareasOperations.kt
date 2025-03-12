@@ -91,7 +91,7 @@ fun APITareasOperations(
         }
 
         item{AddButton("Volver") {
-            navControlador.navigate(AppScreen.APITareasOperations.route)
+            navControlador.navigate(AppScreen.APITareas.route)
             viewModel.reset()
         }}
     }
