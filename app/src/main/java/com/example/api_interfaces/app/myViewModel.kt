@@ -141,6 +141,7 @@ class MyViewModel : ViewModel() {
                 if (response.isSuccessful) {
                     _token.value= response.body()?.token
                     _rol.value = JWT.decode(token.value).getClaim("roles").asString()
+                    _token.value  = "bearer ${_token.value}"
                     changeLogginResult("logged")
                 } else {
                     _error.value = response.errorBody()?.string()
@@ -190,23 +191,26 @@ class MyViewModel : ViewModel() {
         }
     }
 
-    private val _opRes = MutableLiveData<MutableList<String>>()
-    val opRes : LiveData<MutableList<String>> = _opRes
+    private val _opRes = MutableLiveData<Boolean>()
+    val opRes : LiveData<Boolean> = _opRes
+
+    private val _msg = MutableLiveData<String>()
+    val msg : LiveData<String> = _msg
 
     fun insertTareaN(tarea:TareaAddNDTO, token:String){
         viewModelScope.launch {
             try {
                 val response = RetrofitClient.api.insertN(tarea,token)
                 if (response.isSuccessful) {
-                    _opRes.value= response.body()?.message as MutableList<String>?
-                    _opRes.value!!.add("OK")
+                    _opRes.value=true
+                    _msg.value = response.body()?.message.toString()
                 } else {
-                    _opRes.value= mutableListOf("Error")
                     _error.value = response.errorBody()?.string()
+                    _opRes.value=false
                 }
             } catch (e: Exception) {
                 _error.value = e.message
-
+                _opRes.value=false
             }
         }
     }
@@ -216,15 +220,15 @@ class MyViewModel : ViewModel() {
             try {
                 val response = RetrofitClient.api.insertA(tarea,token)
                 if (response.isSuccessful) {
-                    _opRes.value= response.body()?.message as MutableList<String>?
-                    _opRes.value!!.add("OK")
+                    _opRes.value=true
+                    _msg.value = response.body()?.message.toString()
                 } else {
-                    _opRes.value= mutableListOf("Error")
                     _error.value = response.errorBody()?.string()
+                    _opRes.value=false
                 }
             } catch (e: Exception) {
                 _error.value = e.message
-
+                _opRes.value=false
             }
         }
     }
@@ -233,16 +237,22 @@ class MyViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 val response = RetrofitClient.api.getN(token)
-                if (response.isSuccessful) {
-                    _opRes.value= response.body()?.message as MutableList<String>?
-                    _opRes.value!!.add("OK")
-                } else {
-                    _opRes.value= mutableListOf("Error")
-                    _error.value = response.errorBody()?.string()
+                if (response.isSuccessful){
+                    val r =response.body()
+                    _opRes.value=true
+                    if (r != null) {
+                        _msg.value=""
+                        for (s in r){
+                            _msg.value += s.toString()
+                        }
+                    }
+                }else{
+                    _error.value=response.errorBody()?.string()
+                    _opRes.value=false
                 }
             } catch (e: Exception) {
                 _error.value = e.message
-
+                _opRes.value=false
             }
         }
     }
@@ -251,16 +261,22 @@ class MyViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 val response = RetrofitClient.api.getOther(token,username)
-                if (response.isSuccessful) {
-                    _opRes.value= response.body()?.message as MutableList<String>?
-                    _opRes.value!!.add("OK")
-                } else {
-                    _opRes.value= mutableListOf("Error")
-                    _error.value = response.errorBody()?.string()
+                if (response.isSuccessful){
+                    val r =response.body()
+                    _opRes.value=true
+                    if (r != null) {
+                        _msg.value=""
+                        for (s in r){
+                            _msg.value += s.toString()
+                        }
+                    }
+                }else{
+                    _error.value=response.errorBody()?.string()
+                    _opRes.value=false
                 }
             } catch (e: Exception) {
                 _error.value = e.message
-
+                _opRes.value=false
             }
         }
     }
@@ -269,16 +285,22 @@ class MyViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 val response = RetrofitClient.api.getSelf(token)
-                if (response.isSuccessful) {
-                    _opRes.value= response.body()?.message as MutableList<String>?
-                    _opRes.value!!.add("OK")
-                } else {
-                    _opRes.value= mutableListOf("Error")
-                    _error.value = response.errorBody()?.string()
+                if (response.isSuccessful){
+                    val r =response.body()
+                    _opRes.value=true
+                    if (r != null) {
+                        _msg.value=""
+                        for (s in r){
+                            _msg.value += s.toString()
+                        }
+                    }
+                }else{
+                    _error.value=response.errorBody()?.string()
+                    _opRes.value=false
                 }
             } catch (e: Exception) {
                 _error.value = e.message
-
+                _opRes.value=false
             }
         }
     }
@@ -288,15 +310,15 @@ class MyViewModel : ViewModel() {
             try {
                 val response = RetrofitClient.api.updateN(token,tarea,newTarea)
                 if (response.isSuccessful) {
-                    _opRes.value= response.body()?.message as MutableList<String>?
-                    _opRes.value!!.add("OK")
+                    _opRes.value=true
+                    _msg.value = response.body()?.message.toString()
                 } else {
-                    _opRes.value= mutableListOf("Error")
                     _error.value = response.errorBody()?.string()
+                    _opRes.value=false
                 }
             } catch (e: Exception) {
                 _error.value = e.message
-
+                _opRes.value=false
             }
         }
     }
@@ -306,15 +328,15 @@ class MyViewModel : ViewModel() {
             try {
                 val response = RetrofitClient.api.updateA(token,tarea,newTarea)
                 if (response.isSuccessful) {
-                    _opRes.value= response.body()?.message as MutableList<String>?
-                    _opRes.value!!.add("OK")
+                    _opRes.value=true
+                    _msg.value = response.body()?.message.toString()
                 } else {
-                    _opRes.value= mutableListOf("Error")
                     _error.value = response.errorBody()?.string()
+                    _opRes.value=false
                 }
             } catch (e: Exception) {
                 _error.value = e.message
-
+                _opRes.value=false
             }
         }
     }
@@ -324,15 +346,15 @@ class MyViewModel : ViewModel() {
             try {
                 val response = RetrofitClient.api.completeN(token,tarea)
                 if (response.isSuccessful) {
-                    _opRes.value= response.body()?.message as MutableList<String>?
-                    _opRes.value!!.add("OK")
+                    _opRes.value=true
+                    _msg.value = response.body()?.message.toString()
                 } else {
-                    _opRes.value= mutableListOf("Error")
                     _error.value = response.errorBody()?.string()
+                    _opRes.value=false
                 }
             } catch (e: Exception) {
                 _error.value = e.message
-
+                _opRes.value=false
             }
         }
     }
@@ -342,15 +364,15 @@ class MyViewModel : ViewModel() {
             try {
                 val response = RetrofitClient.api.completeA(token,tarea)
                 if (response.isSuccessful) {
-                    _opRes.value= response.body()?.message as MutableList<String>?
-                    _opRes.value!!.add("OK")
+                    _opRes.value=true
+                    _msg.value = response.body()?.message.toString()
                 } else {
-                    _opRes.value= mutableListOf("Error")
                     _error.value = response.errorBody()?.string()
+                    _opRes.value=false
                 }
             } catch (e: Exception) {
                 _error.value = e.message
-
+                _opRes.value=false
             }
         }
     }
@@ -360,15 +382,15 @@ class MyViewModel : ViewModel() {
             try {
                 val response = RetrofitClient.api.uncompleteN(token,tarea)
                 if (response.isSuccessful) {
-                    _opRes.value= response.body()?.message as MutableList<String>?
-                    _opRes.value!!.add("OK")
+                    _opRes.value=true
+                    _msg.value = response.body()?.message.toString()
                 } else {
-                    _opRes.value= mutableListOf("Error")
                     _error.value = response.errorBody()?.string()
+                    _opRes.value=false
                 }
             } catch (e: Exception) {
                 _error.value = e.message
-
+                _opRes.value=false
             }
         }
     }
@@ -378,15 +400,15 @@ class MyViewModel : ViewModel() {
             try {
                 val response = RetrofitClient.api.uncompleteA(token,tarea)
                 if (response.isSuccessful) {
-                    _opRes.value= response.body()?.message as MutableList<String>?
-                    _opRes.value!!.add("OK")
+                    _opRes.value=true
+                    _msg.value = response.body()?.message.toString()
                 } else {
-                    _opRes.value= mutableListOf("Error")
                     _error.value = response.errorBody()?.string()
+                    _opRes.value=false
                 }
             } catch (e: Exception) {
                 _error.value = e.message
-
+                _opRes.value=false
             }
         }
     }
@@ -396,15 +418,15 @@ class MyViewModel : ViewModel() {
             try {
                 val response = RetrofitClient.api.deleteN(token,tarea)
                 if (response.isSuccessful) {
-                    _opRes.value= response.body()?.message as MutableList<String>?
-                    _opRes.value!!.add("OK")
+                    _opRes.value=true
+                    _msg.value = response.body()?.message.toString()
                 } else {
-                    _opRes.value= mutableListOf("Error")
                     _error.value = response.errorBody()?.string()
+                    _opRes.value=false
                 }
             } catch (e: Exception) {
                 _error.value = e.message
-
+                _opRes.value=false
             }
         }
     }
@@ -414,15 +436,15 @@ class MyViewModel : ViewModel() {
             try {
                 val response = RetrofitClient.api.deleteA(token,tarea)
                 if (response.isSuccessful) {
-                    _opRes.value= response.body()?.message as MutableList<String>?
-                    _opRes.value!!.add("OK")
+                    _opRes.value=true
+                    _msg.value = response.body()?.message.toString()
                 } else {
-                    _opRes.value= mutableListOf("Error")
                     _error.value = response.errorBody()?.string()
+                    _opRes.value=false
                 }
             } catch (e: Exception) {
                 _error.value = e.message
-
+                _opRes.value=false
             }
         }
     }
@@ -484,7 +506,7 @@ class MyViewModel : ViewModel() {
         _tUsername.value=it
     }
 
-    fun changeOpRes(s: String) {
-        _opRes.value= mutableListOf(s)
+    fun clearMsg() {
+        _msg.value=""
     }
 }

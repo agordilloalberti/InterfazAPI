@@ -2,9 +2,11 @@ package com.example.api_interfaces.app.api
 
 import com.example.api_interfaces.app.api.dtos.LoginResponse
 import com.example.api_interfaces.app.api.dtos.LoginUsuarioDTO
-import com.example.api_interfaces.app.api.dtos.NormalResponse
+import com.example.api_interfaces.app.api.dtos.NormalTareaResponse
+import com.example.api_interfaces.app.api.dtos.RegisterResponse
 import com.example.api_interfaces.app.api.dtos.TareaAddADTO
 import com.example.api_interfaces.app.api.dtos.TareaAddNDTO
+import com.example.api_interfaces.app.api.dtos.TareaDTO
 import com.example.api_interfaces.app.api.dtos.UsuarioRegisterDTO
 import retrofit2.Response
 import retrofit2.http.Body
@@ -27,19 +29,19 @@ interface APIService {
     @POST("Usuarios/register")
     suspend fun register(
         @Body usuario: UsuarioRegisterDTO
-    ): Response<NormalResponse>
+    ): Response<RegisterResponse>
 
     @POST("Tareas/insert")
     suspend fun insertN(
         @Body tarea: TareaAddNDTO,
         @Header("Authorization") token: String
-    ): Response<NormalResponse>
+    ): Response<NormalTareaResponse>
 
     @POST("TareasAdmin/add")
     suspend fun insertA(
         @Body tarea: TareaAddADTO,
         @Header("Authorization") token: String
-    ): Response<NormalResponse>
+    ): Response<NormalTareaResponse>
 
 
     //GET
@@ -47,18 +49,18 @@ interface APIService {
     @GET("Tareas/get")
     suspend fun getN(
         @Header("Authorization") token: String
-    ): Response<NormalResponse>
+    ): Response<List<TareaDTO>>
 
     @GET("TareasAdmin/{username}")
     suspend fun getOther(
         @Header("Authorization") token: String,
         @Path("username") username: String
-    ): Response<NormalResponse>
+    ): Response<List<TareaDTO>>
 
     @GET("TareasAdmin/get")
     suspend fun getSelf(
         @Header("Authorization") token: String
-    ): Response<NormalResponse>
+    ): Response<List<TareaDTO>>
 
 
     //PUT
@@ -68,38 +70,38 @@ interface APIService {
         @Header("Authorization") token: String,
         @Path("tarea") tarea: String,
         @Body tareaAdd: TareaAddNDTO
-    ): Response<NormalResponse>
+    ): Response<NormalTareaResponse>
 
     @PUT("TareasAdmin/{tarea}")
     suspend fun updateA(
         @Header("Authorization") token: String,
         @Path("tarea") tarea: String,
         @Body tareaAdd: TareaAddADTO
-    ): Response<NormalResponse>
+    ): Response<NormalTareaResponse>
 
     @PUT("Tareas/complete/{tarea}")
     suspend fun completeN(
         @Header("Authorization") token: String,
         @Path("tarea") tarea: String
-    ): Response<NormalResponse>
+    ): Response<NormalTareaResponse>
 
     @PUT("TareasAdmin/complete/{tarea}")
     suspend fun completeA(
         @Header("Authorization") token: String,
         @Path("tarea") tarea: String
-    ): Response<NormalResponse>
+    ): Response<NormalTareaResponse>
 
     @PUT("Tareas/uncomplete/{tarea}")
     suspend fun uncompleteN(
         @Header("Authorization") token: String,
         @Path("tarea") tarea: String
-    ): Response<NormalResponse>
+    ): Response<NormalTareaResponse>
 
     @PUT("TareasAdmin/uncomplete/{tarea}")
     suspend fun uncompleteA(
         @Header("Authorization") token: String,
         @Path("tarea") tarea: String
-    ): Response<NormalResponse>
+    ): Response<NormalTareaResponse>
 
 
     //DELETE
@@ -108,11 +110,11 @@ interface APIService {
     suspend fun deleteN(
         @Header("Authorization") token: String,
         @Path("tarea") tarea: String
-    ): Response<NormalResponse>
+    ): Response<NormalTareaResponse>
 
     @DELETE("TareasAdmin/{tarea}")
     suspend fun deleteA(
         @Header("Authorization") token: String,
         @Path("tarea") tarea: String
-    ): Response<NormalResponse>
+    ): Response<NormalTareaResponse>
 }

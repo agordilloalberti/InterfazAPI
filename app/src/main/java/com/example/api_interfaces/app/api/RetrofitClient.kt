@@ -6,7 +6,7 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
 
 object RetrofitClient {
-    private const val URL_BASE = "https://adat-api-graf-1.onrender.com"
+    private const val URL_BASE = "https://adat-api-graf-1.onrender.com/"
 
     private val okHttpClient = OkHttpClient.Builder()
         .connectTimeout(120, TimeUnit.SECONDS)

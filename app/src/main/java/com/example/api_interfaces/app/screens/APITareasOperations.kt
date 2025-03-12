@@ -31,7 +31,8 @@ fun APITareasOperations(
     val username by viewModel.tUsername.observeAsState("")
     val screen by viewModel.screen.observeAsState("")
     val token by viewModel.token.observeAsState("")
-    val opRes by viewModel.opRes.observeAsState(listOf(""))
+    val opRes by viewModel.opRes.observeAsState(false)
+    val msg by viewModel.msg.observeAsState("")
     val error by viewModel.error.observeAsState("")
     val dismissed by viewModel.dismissed.observeAsState(false)
 
@@ -40,10 +41,10 @@ fun APITareasOperations(
         .background(Color.Black)) {
         AddPlainText("Operación: $screen")
 
-        if ((opRes.isEmpty() || opRes[0] =="Error") && !dismissed){
-            AddAlertDialog("Error",error) {viewModel.dismiss();viewModel.changeOpRes("")}
-        }else if(opRes.contains("OK")){
-            AddAlertDialog("Result",opRes.toString()) {viewModel.dismiss();viewModel.changeOpRes("")}
+        if (msg.isNotBlank() && !opRes && !dismissed){
+            AddAlertDialog("Error","error: $error") {viewModel.dismiss();viewModel.clearMsg()}
+        }else if(msg.isNotBlank() && opRes && !dismissed){
+            AddAlertDialog("Result","Operación: $screen realizada con exito\nRespuesta: $msg") {viewModel.dismiss();viewModel.clearMsg()}
         }
 
         if (comps.contains("name")) {
@@ -66,7 +67,7 @@ fun APITareasOperations(
             AddTextField("Username", username, { viewModel.changeTusername(it) })
         }
 
-        AddButton("Confirmar operación $screen")
+        AddButton("Proceder")
         {
             if (screen=="insertN") {
                 viewModel.insertTareaN(TareaAddNDTO(tName,desc),token)
