@@ -105,10 +105,6 @@ class MyViewModel : ViewModel() {
 
     fun dismiss() {
         _dismissed.value = true
-        viewModelScope.launch {
-            kotlinx.coroutines.delay(100)
-            _dismissed.value = false
-        }
     }
 
     private val _loginResult = MutableLiveData("notlogged")
@@ -203,7 +199,7 @@ class MyViewModel : ViewModel() {
                 val response = RetrofitClient.api.insertN(tarea,token)
                 if (response.isSuccessful) {
                     _opRes.value=true
-                    _msg.value = response.body()?.message.toString()
+                    _msg.value = response.body()?.tarea.toString()
                 } else {
                     _error.value = response.errorBody()?.string()
                     _opRes.value=false
@@ -221,7 +217,7 @@ class MyViewModel : ViewModel() {
                 val response = RetrofitClient.api.insertA(tarea,token)
                 if (response.isSuccessful) {
                     _opRes.value=true
-                    _msg.value = response.body()?.message.toString()
+                    _msg.value = response.body()?.tarea.toString()
                 } else {
                     _error.value = response.errorBody()?.string()
                     _opRes.value=false
@@ -241,9 +237,13 @@ class MyViewModel : ViewModel() {
                     val r =response.body()
                     _opRes.value=true
                     if (r != null) {
-                        _msg.value=""
-                        for (s in r){
-                            _msg.value += s.toString()
+                        if (r.isNotEmpty()) {
+                            _msg.value = ""
+                            for (s in r) {
+                                _msg.value += s.toString()
+                            }
+                        }else{
+                            _msg.value="No hay tareas"
                         }
                     }
                 }else{
@@ -265,9 +265,13 @@ class MyViewModel : ViewModel() {
                     val r =response.body()
                     _opRes.value=true
                     if (r != null) {
-                        _msg.value=""
-                        for (s in r){
-                            _msg.value += s.toString()
+                        if (r.isNotEmpty()) {
+                            _msg.value = ""
+                            for (s in r) {
+                                _msg.value += s.toString()
+                            }
+                        }else{
+                            _msg.value="No hay tareas"
                         }
                     }
                 }else{
@@ -289,9 +293,13 @@ class MyViewModel : ViewModel() {
                     val r =response.body()
                     _opRes.value=true
                     if (r != null) {
-                        _msg.value=""
-                        for (s in r){
-                            _msg.value += s.toString()
+                        if (r.isNotEmpty()) {
+                            _msg.value = ""
+                            for (s in r) {
+                                _msg.value += s.toString()
+                            }
+                        }else{
+                            _msg.value="No hay tareas"
                         }
                     }
                 }else{
@@ -311,7 +319,7 @@ class MyViewModel : ViewModel() {
                 val response = RetrofitClient.api.updateN(token,tarea,newTarea)
                 if (response.isSuccessful) {
                     _opRes.value=true
-                    _msg.value = response.body()?.message.toString()
+                    _msg.value = response.body()?.tarea.toString()
                 } else {
                     _error.value = response.errorBody()?.string()
                     _opRes.value=false
@@ -329,7 +337,7 @@ class MyViewModel : ViewModel() {
                 val response = RetrofitClient.api.updateA(token,tarea,newTarea)
                 if (response.isSuccessful) {
                     _opRes.value=true
-                    _msg.value = response.body()?.message.toString()
+                    _msg.value = response.body()?.tarea.toString()
                 } else {
                     _error.value = response.errorBody()?.string()
                     _opRes.value=false
@@ -347,7 +355,7 @@ class MyViewModel : ViewModel() {
                 val response = RetrofitClient.api.completeN(token,tarea)
                 if (response.isSuccessful) {
                     _opRes.value=true
-                    _msg.value = response.body()?.message.toString()
+                    _msg.value = response.body()?.tarea.toString()
                 } else {
                     _error.value = response.errorBody()?.string()
                     _opRes.value=false
@@ -365,7 +373,7 @@ class MyViewModel : ViewModel() {
                 val response = RetrofitClient.api.completeA(token,tarea)
                 if (response.isSuccessful) {
                     _opRes.value=true
-                    _msg.value = response.body()?.message.toString()
+                    _msg.value = response.body()?.tarea.toString()
                 } else {
                     _error.value = response.errorBody()?.string()
                     _opRes.value=false
@@ -383,7 +391,7 @@ class MyViewModel : ViewModel() {
                 val response = RetrofitClient.api.uncompleteN(token,tarea)
                 if (response.isSuccessful) {
                     _opRes.value=true
-                    _msg.value = response.body()?.message.toString()
+                    _msg.value = response.body()?.tarea.toString()
                 } else {
                     _error.value = response.errorBody()?.string()
                     _opRes.value=false
@@ -401,7 +409,7 @@ class MyViewModel : ViewModel() {
                 val response = RetrofitClient.api.uncompleteA(token,tarea)
                 if (response.isSuccessful) {
                     _opRes.value=true
-                    _msg.value = response.body()?.message.toString()
+                    _msg.value = response.body()?.tarea.toString()
                 } else {
                     _error.value = response.errorBody()?.string()
                     _opRes.value=false
@@ -419,7 +427,7 @@ class MyViewModel : ViewModel() {
                 val response = RetrofitClient.api.deleteN(token,tarea)
                 if (response.isSuccessful) {
                     _opRes.value=true
-                    _msg.value = response.body()?.message.toString()
+                    _msg.value = response.body()?.tarea.toString()
                 } else {
                     _error.value = response.errorBody()?.string()
                     _opRes.value=false
@@ -437,7 +445,7 @@ class MyViewModel : ViewModel() {
                 val response = RetrofitClient.api.deleteA(token,tarea)
                 if (response.isSuccessful) {
                     _opRes.value=true
-                    _msg.value = response.body()?.message.toString()
+                    _msg.value = response.body()?.tarea.toString()
                 } else {
                     _error.value = response.errorBody()?.string()
                     _opRes.value=false
@@ -507,6 +515,15 @@ class MyViewModel : ViewModel() {
     }
 
     fun clearMsg() {
-        _msg.value=""
+        _msg.value = ""
+        _opRes.value = false
+        _dismissed.value = false
     }
+
+    fun clearError() {
+        _error.value = ""
+        _opRes.value = false
+        _dismissed.value = false
+    }
+
 }

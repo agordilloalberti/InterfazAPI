@@ -41,8 +41,8 @@ fun APITareasOperations(
         .background(Color.Black)) {
         AddPlainText("Operación: $screen")
 
-        if (msg.isNotBlank() && !opRes && !dismissed){
-            AddAlertDialog("Error","error: $error") {viewModel.dismiss();viewModel.clearMsg()}
+        if (error.isNotBlank() && !opRes && !dismissed){
+            AddAlertDialog("Error","error: $error") {viewModel.dismiss();viewModel.clearError()}
         }else if(msg.isNotBlank() && opRes && !dismissed){
             AddAlertDialog("Result","Operación: $screen realizada con exito\nRespuesta: $msg") {viewModel.dismiss();viewModel.clearMsg()}
         }
