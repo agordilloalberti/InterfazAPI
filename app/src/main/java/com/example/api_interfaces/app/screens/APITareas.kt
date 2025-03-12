@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -31,8 +32,8 @@ fun APITareas(navControlador: NavController, modifier: Modifier, viewModel: MyVi
         AddAlertDialog("Error","Debes estar logeado para acceder a estas funciones") {viewModel.dismiss();navControlador.navigate(AppScreen.APIMenu.route)}
     }
 
-    Column(modifier.fillMaxSize().background(Color.Black)){
-        Row() {
+    LazyColumn(modifier.fillMaxSize().background(Color.Black)){
+        item{Row{
             Column(Modifier.weight(1f)) {
                 AddPlainText("NORMAL USER")
                 AddButton("Insertar tarea") {
@@ -113,13 +114,13 @@ fun APITareas(navControlador: NavController, modifier: Modifier, viewModel: MyVi
                     );viewModel.changeScreen("deleteA")
                 }
             }
-        }
+        }}
 
-        AddButton("Volver") {
+        item{AddButton("Volver") {
             navControlador.navigate(AppScreen.APIMenu.route)
             viewModel.changeUser("")
             viewModel.reset()
-        }
+        }}
 
     }
 

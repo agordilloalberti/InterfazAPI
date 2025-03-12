@@ -1,8 +1,8 @@
 package com.example.api_interfaces.app.screens
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -36,70 +36,63 @@ fun APITareasOperations(
     val error by viewModel.error.observeAsState("")
     val dismissed by viewModel.dismissed.observeAsState(false)
 
-    Column(modifier
+    LazyColumn(modifier
         .fillMaxSize()
         .background(Color.Black)) {
-        AddPlainText("Operación: $screen")
+        item { AddPlainText("Operación: $screen")}
 
         if (error.isNotBlank() && !opRes && !dismissed){
-            AddAlertDialog("Error","error: $error") {viewModel.dismiss();viewModel.clearError()}
+            item {AddAlertDialog("Error","error: $error") {viewModel.dismiss();viewModel.clearError()}}
         }else if(msg.isNotBlank() && opRes && !dismissed){
-            AddAlertDialog("Result","Operación: $screen realizada con exito\nRespuesta: $msg") {viewModel.dismiss();viewModel.clearMsg()}
+            item {AddAlertDialog("Result","Operación: $screen realizada con exito\nRespuesta: $msg") {viewModel.dismiss();viewModel.clearMsg()}}
         }
 
         if (comps.contains("name")) {
-            AddPlainText("Nombre de la tarea")
-            AddTextField("Nombre", tName, { viewModel.changeTName(it) })
+            item{AddPlainText("Nombre de la tarea")}
+            item{AddTextField("Nombre", tName, { viewModel.changeTName(it) })}
         }
 
         if (comps.contains("newName")) {
-            AddPlainText("Nuevo nombre de la tarea")
-            AddTextField("Nuevo nombre", tNName, { viewModel.changeTNName(it) })
+            item{AddPlainText("Nuevo nombre de la tarea")}
+            item{AddTextField("Nuevo nombre", tNName, { viewModel.changeTNName(it) })}
         }
 
         if (comps.contains("descrip")) {
-            AddPlainText("Descripción de la tarea")
-            AddTextField("Descripción", desc, { viewModel.changeDes(it) })
+            item{AddPlainText("Descripción de la tarea")}
+            item{AddTextField("Descripción", desc, { viewModel.changeDes(it) })}
         }
 
         if (comps.contains("username")) {
-            AddPlainText("Nombre del usuario\nSi se deja vacio se usara el nombre del usuario actual")
-            AddTextField("Username", username, { viewModel.changeTusername(it) })
+            item{AddPlainText("Nombre del usuario\nSi se deja vacio se usara el nombre del usuario actual")}
+            item{AddTextField("Username", username, { viewModel.changeTusername(it) })}
         }
 
-        AddButton("Proceder")
-        {
-            if (screen=="insertN") {
-                viewModel.insertTareaN(TareaAddNDTO(tName,desc),token)
-            }else if (screen=="insertA"){
-                viewModel.insertTareaA(TareaAddADTO(tName,desc,username),token)
-            }else if(screen=="getN"){
-                viewModel.getTareaN(token)
-            }else if (screen=="getA" && username.isBlank()){
-                viewModel.getTareaA(token)
-            }else if (screen=="getA") {
-                viewModel.getTareaOtro(token, username)
-            }else if (screen=="updateN"){
-                viewModel.updateTareaN(token,tName,TareaAddNDTO(tNName,desc))
-            }else if(screen=="updateA"){
-                viewModel.updateTareaA(token,tName,(TareaAddADTO(tNName,desc,username)))
-            }else if (screen=="completeN"){
-                viewModel.completeTareaN(token,tName)
-            }else if (screen=="completeA"){
-                viewModel.completeTareaA(token,tName)
-            }else if (screen=="uncompleteN"){
-                viewModel.uncompleteTareaN(token,tName)
-            }else if (screen=="uncompleteA") {
-                viewModel.uncompleteTareaA(token, tName)
-            }else if(screen=="deleteN"){
-                viewModel.deleteTareaN(token,tName)
-            }else if (screen=="deleteA"){
-                viewModel.deleteTareaA(token,tName)
+        item {
+            AddButton("Proceder") {
+                when (screen) {
+                    "insertN" -> viewModel.insertTareaN(TareaAddNDTO(tName, desc), token)
+                    "insertA" -> viewModel.insertTareaA(TareaAddADTO(tName, desc, username), token)
+                    "getN" -> viewModel.getTareaN(token)
+                    "getA" -> if (username.isBlank()) {
+                        viewModel.getTareaA(token)
+                    } else {
+                        viewModel.getTareaOtro(token, username)
+                    }
+                    "updateN" -> viewModel.updateTareaN(token, tName, TareaAddNDTO(tNName, desc))
+                    "updateA" -> viewModel.updateTareaA(token, tName, TareaAddADTO(tNName, desc, username))
+                    "completeN" -> viewModel.completeTareaN(token, tName)
+                    "completeA" -> viewModel.completeTareaA(token, tName)
+                    "uncompleteN" -> viewModel.uncompleteTareaN(token, tName)
+                    "uncompleteA" -> viewModel.uncompleteTareaA(token, tName)
+                    "deleteN" -> viewModel.deleteTareaN(token, tName)
+                    "deleteA" -> viewModel.deleteTareaA(token, tName)
+                }
             }
         }
-        AddButton("Volver") {
-            navControlador.navigate(AppScreen.APIMenu.route)
+
+        item{AddButton("Volver") {
+            navControlador.navigate(AppScreen.APITareasOperations.route)
             viewModel.reset()
-        }
+        }}
     }
 }
