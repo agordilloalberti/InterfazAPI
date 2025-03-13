@@ -19,6 +19,10 @@ import com.example.api_interfaces.app.Toolbar
 import com.example.api_interfaces.app.navigation.AppScreen
 import kotlin.system.exitProcess
 
+/**
+ * Pantala princiapl conteniendo el acceso a la api, las opciones (WIP) y un boton para cerrar la app
+ */
+
 @Composable
 fun MainScreen(navControlador: NavController, modifier: Modifier, viewModel: MyViewModel){
     Box(modifier = modifier.fillMaxSize()) {

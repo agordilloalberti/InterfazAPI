@@ -21,6 +21,10 @@ import com.example.api_interfaces.app.MyViewModel
 import com.example.api_interfaces.app.Toolbar
 import com.example.api_interfaces.app.navigation.AppScreen
 
+/**
+ * Menu que contiene las opciones princiaples, login, registrar y acceder a las operaciones de tareas.
+ * Tambien cuenta con un boton para volver
+ */
 @Composable
 fun APIMenu(navControlador: NavHostController, modifier: Modifier, viewModel: MyViewModel) {
     Box(modifier = modifier.fillMaxSize()) {

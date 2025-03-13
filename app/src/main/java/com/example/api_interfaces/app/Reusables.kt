@@ -28,6 +28,10 @@ import androidx.navigation.NavController
 import com.example.api_interfaces.R
 import com.example.api_interfaces.app.navigation.AppScreen
 
+/**
+ * Archvio compuesto por varios componentes que se reutilizan a lo largo del programa
+ */
+
 @Composable
 fun Toolbar(navControlador: NavController, modifier: Modifier, actualscreen: String = ""){
     Box(modifier = modifier.fillMaxWidth().background(colorResource(R.color.app))){

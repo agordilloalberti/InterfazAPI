@@ -20,6 +20,9 @@ import com.example.api_interfaces.app.MyViewModel
 import com.example.api_interfaces.app.Toolbar
 import com.example.api_interfaces.app.navigation.AppScreen
 
+/**
+ * Portada simple para mostrar el objetivo de la app
+ */
 @Composable
 fun Portada(navControlador: NavController, modifier: Modifier, viewModel: MyViewModel) {
     Box(modifier = modifier.fillMaxSize()) {

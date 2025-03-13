@@ -13,123 +13,162 @@ import com.example.api_interfaces.app.api.dtos.TareaAddNDTO
 import com.example.api_interfaces.app.api.dtos.UsuarioRegisterDTO
 import kotlinx.coroutines.launch
 
+/**
+ * Clase encargada de almacenar todos los datos del programa
+ */
 class MyViewModel : ViewModel() {
 
+    //El nombre de la tarea
     private val _tName = MutableLiveData<String>()
     val tName : LiveData<String> = _tName
 
+    //El nuevo nombre de la tarea
     private val _tNName = MutableLiveData<String>()
     val tNName : LiveData<String> = _tNName
 
+    //La descripción de la tarea
     private val _desc = MutableLiveData<String>()
     val desc : LiveData<String> = _desc
 
+    //El nombre de usuario, para las tareas
     private val _tUsername = MutableLiveData<String>()
     val tUsername : LiveData<String> = _tUsername
 
+    //El nombre de usuario para el login o registro
     private val _username = MutableLiveData("")
     val username: LiveData<String> = _username
 
+    //La contraseña
     private val _password = MutableLiveData("")
     val password: LiveData<String> = _password
 
+    //La repetición de la contraseña
     private val _passwordRepeat = MutableLiveData("")
     val passwordRepeat: LiveData<String> = _passwordRepeat
 
+    //El nombre del usuario
     private val _name = MutableLiveData("")
     val name: LiveData<String> = _name
 
+    //El apellido del usuario
     private val _surname = MutableLiveData("")
     val surname: LiveData<String> = _surname
 
+    //La calle
     private val _calle = MutableLiveData("")
     val calle: LiveData<String> = _calle
 
+    //El numero
     private val _num = MutableLiveData("")
     val num: LiveData<String> = _num
 
+    //El municipio
     private val _muni = MutableLiveData("")
     val muni: LiveData<String> = _muni
 
+    //La provincia
     private val _prov = MutableLiveData("")
     val prov: LiveData<String> = _prov
 
+    //El Codigo postal
     private val _cp = MutableLiveData("")
     val cp: LiveData<String> = _cp
 
+    //El Rol del usuario
     private val _rol = MutableLiveData("")
     val rol : LiveData<String> = _rol
 
+    //El estado de las alertas
     private val _dismissed = MutableLiveData(false)
     val dismissed: LiveData<Boolean> = _dismissed
 
+    //Metodo para cambiar el nombre de usuario
     fun changeUser(newUser: String) {
         _username.value = newUser
     }
 
+    //Metodo para cambiar la contraseña
     fun changePassword(newPassword: String) {
         _password.value = newPassword
     }
 
+    //Metodo para cambiar la repeticion de contraseña
     fun changePassRepeat(new: String) {
         _passwordRepeat.value = new
     }
 
+    //Metodo para cambiar el nombre del usuario
     fun changeName(new: String) {
         _name.value = new
     }
 
+    //Metodo para cambiar el apellido del usuario
     fun changeSurname(new: String) {
         _surname.value = new
     }
 
+    //Metodo para cambiar la calle
     fun changeCalle(new: String) {
         _calle.value = new
     }
 
+    //Metodo para cambiar el numero
     fun changeNum(new: String) {
         _num.value = new
     }
 
+    //Metodo para cambiar la provincia
     fun changeProv(new: String) {
         _prov.value = new
     }
 
+    //Metodo para cambiar el municipio
     fun changeMuni(new: String) {
         _muni.value = new
     }
 
+    //Metodo para cambiar el codigo postal
     fun changeCP(new: String) {
         _cp.value = new
     }
 
+    //Metodo para quitar las alertas
     fun dismiss() {
         _dismissed.value = true
     }
 
+    //Estado del login
     private val _loginResult = MutableLiveData("notlogged")
     val loginResult: LiveData<String> = _loginResult
 
+    //Metodo para cambiar el estado del login
     fun changeLogginResult(result: String) {
         _loginResult.value=result
         _dismissed.value = true
         _dismissed.value = false
     }
 
+    //Estado del registro
     private val _registerResult = MutableLiveData("")
     val registerResult:LiveData<String> = _registerResult
 
+    //Metodo para cambiar el estado del registro
     fun changeRegisterResult(result: String) {
         _registerResult.value=result
         changeLogginResult("")
     }
 
+    //El token de usuario
     private val _token = MutableLiveData("")
     val token: LiveData<String> = _token
 
+
+    //El mensaje de error
     private val _error = MutableLiveData("")
     val error : LiveData<String> = _error
 
+
+    //Metodo para logear a un usuario
     fun loginUser(username: String, password: String) {
         viewModelScope.launch {
             try {
@@ -150,6 +189,7 @@ class MyViewModel : ViewModel() {
         }
     }
 
+    //Metodo para registrar un usuario
     fun register(
         username:String,
         password: String,
@@ -187,12 +227,15 @@ class MyViewModel : ViewModel() {
         }
     }
 
+    //Resultado de la operacion anterior
     private val _opRes = MutableLiveData<Boolean>()
     val opRes : LiveData<Boolean> = _opRes
 
+    //Mensaje de la operación anterior
     private val _msg = MutableLiveData<String>()
     val msg : LiveData<String> = _msg
 
+    //Metodo para insertar tareas desde usuario normal
     fun insertTareaN(tarea:TareaAddNDTO, token:String){
         viewModelScope.launch {
             try {
@@ -211,6 +254,7 @@ class MyViewModel : ViewModel() {
         }
     }
 
+    //Metodo para insertar tareas desde usuario administrador
     fun insertTareaA(tarea: TareaAddADTO, token:String){
         viewModelScope.launch {
             try {
@@ -229,6 +273,7 @@ class MyViewModel : ViewModel() {
         }
     }
 
+    //Metodo para obtener tareas desde usuario normal
     fun getTareaN(token: String){
         viewModelScope.launch {
             try {
@@ -257,6 +302,7 @@ class MyViewModel : ViewModel() {
         }
     }
 
+    //Metodo para obetener tareas desde usuario administrador
     fun getTareaOtro(token: String,username: String){
         viewModelScope.launch {
             try {
@@ -285,6 +331,7 @@ class MyViewModel : ViewModel() {
         }
     }
 
+    //Metodo para obtenr las tareas del administrador
     fun getTareaA(token: String){
         viewModelScope.launch {
             try {
@@ -313,6 +360,8 @@ class MyViewModel : ViewModel() {
         }
     }
 
+
+    //Metodo para actualizar tareas desde usuario normal
     fun updateTareaN(token: String,tarea:String,newTarea:TareaAddNDTO){
         viewModelScope.launch {
             try {
@@ -331,6 +380,7 @@ class MyViewModel : ViewModel() {
         }
     }
 
+    //Metodo para actualizar tareas desde usuario administrador
     fun updateTareaA(token: String,tarea:String,newTarea:TareaAddADTO){
         viewModelScope.launch {
             try {
@@ -349,6 +399,8 @@ class MyViewModel : ViewModel() {
         }
     }
 
+
+    //Metodo para completar tareas desde usuario normal
     fun completeTareaN(token: String,tarea: String){
         viewModelScope.launch {
             try {
@@ -367,6 +419,8 @@ class MyViewModel : ViewModel() {
         }
     }
 
+
+    //Metodo para completar tareas desde usuario administrador
     fun completeTareaA(token: String,tarea: String){
         viewModelScope.launch {
             try {
@@ -385,6 +439,8 @@ class MyViewModel : ViewModel() {
         }
     }
 
+
+    //Metodo para descompletar tareas desde usuario normal
     fun uncompleteTareaN(token: String,tarea: String){
         viewModelScope.launch {
             try {
@@ -403,6 +459,8 @@ class MyViewModel : ViewModel() {
         }
     }
 
+
+    //Metodo para descompletar tareas desde usuario administrador
     fun uncompleteTareaA(token: String,tarea: String){
         viewModelScope.launch {
             try {
@@ -421,6 +479,7 @@ class MyViewModel : ViewModel() {
         }
     }
 
+    //Metodo para borrar  tareas desde usuario normal
     fun deleteTareaN(token: String,tarea: String){
         viewModelScope.launch {
             try {
@@ -439,6 +498,7 @@ class MyViewModel : ViewModel() {
         }
     }
 
+    //Metodo para borrar tareas desde usuario administrador
     fun deleteTareaA(token: String,tarea: String){
         viewModelScope.launch {
             try {
@@ -457,17 +517,21 @@ class MyViewModel : ViewModel() {
         }
     }
 
+    //Variable para almacenar los componentes
     private val _comps = MutableLiveData(listOf<String>())
     val comps: LiveData<List<String>> = _comps
 
+    //Variable para almacenar la operación a realizar
     private val _screen = MutableLiveData("")
     val screen : LiveData<String> = _screen
 
+    //Metodo para cambiar de operación
     fun changeScreen(screen: String){
         _screen.value=screen
         _comps.value = checkComponents(screen)
     }
 
+    //Metodo para saber que componentes se deben mostrar
     private fun checkComponents(screen: String): List<String> {
         return when (screen) {
             "insertN" -> listOf("name", "descrip")
@@ -481,6 +545,7 @@ class MyViewModel : ViewModel() {
         }
     }
 
+    //Metodo para reiniciar todos los valores
     fun reset(){
         _username.value=""
         _password.value=""
@@ -498,28 +563,34 @@ class MyViewModel : ViewModel() {
         _desc.value=""
     }
 
+    //Metodo para reiniciar el valor del nombre de la tarea
     fun changeTName(new: String) {
         _tName.value=new
     }
 
+    //Metodo para reiniciar el valor del nombre nuevo de la tarea
     fun changeTNName(it: String) {
         _tNName.value=it
     }
 
+    //Metodo para reiniciar el valor de la descripcion de la tarea
     fun changeDes(it: String) {
         _desc.value=it
     }
 
+    //Metodo para reiniciar el valor del nombre de usuario
     fun changeTusername(it: String) {
         _tUsername.value=it
     }
 
+    //Metodo para reiniciar el valor del mensaje asi como del resultado de la operación y el estado de las alertas
     fun clearMsg() {
         _msg.value = ""
         _opRes.value = false
         _dismissed.value = false
     }
 
+    //Metodo para reiniciar el valor del mensaje de error asi como del resultado de la operación y el estado de las alertas
     fun clearError() {
         _error.value = ""
         _opRes.value = false

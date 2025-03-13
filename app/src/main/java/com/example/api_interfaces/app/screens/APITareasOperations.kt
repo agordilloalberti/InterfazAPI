@@ -18,22 +18,50 @@ import com.example.api_interfaces.app.api.dtos.TareaAddADTO
 import com.example.api_interfaces.app.api.dtos.TareaAddNDTO
 import com.example.api_interfaces.app.navigation.AppScreen
 
+
+/**
+ * Esta es la pantalla dedicada a las operaciones de las tareas
+ */
 @Composable
 fun APITareasOperations(
     navControlador: NavHostController,
     modifier: Modifier,
     viewModel: MyViewModel
 ) {
+
+    //Estas variables cotrolan:
+
+    //Los componentes a mostrar
     val comps by viewModel.comps.observeAsState(listOf(""))
+
+    //El nombre de la tarea
     val tName by viewModel.tName.observeAsState("")
+
+    //El nuevo nombre de la tarea
     val tNName by viewModel.tNName.observeAsState("")
+
+    //La descripción de la tarea
     val desc by viewModel.desc.observeAsState("")
+
+    //El nombre de usuario
     val username by viewModel.tUsername.observeAsState("")
+
+    //La operación a realizar
     val screen by viewModel.screen.observeAsState("")
+
+    //El token de autenticación
     val token by viewModel.token.observeAsState("")
+
+    //El resultado de la operación
     val opRes by viewModel.opRes.observeAsState(false)
+
+    //El mensaje duevuelto
     val msg by viewModel.msg.observeAsState("")
+
+    //El mensaje de error duevuelto
     val error by viewModel.error.observeAsState("")
+
+    //El estado de los dialogos de alerta
     val dismissed by viewModel.dismissed.observeAsState(false)
 
     LazyColumn(modifier
@@ -41,11 +69,16 @@ fun APITareasOperations(
         .background(Color.Black)) {
         item { AddPlainText("Operación: $screen")}
 
+        //Los dialogos se muestran si: no hay mensaje, es decir, no se ha relizado la operación, el resultado de la operación,
+        //para saber cual mostrar y el dismiss, para ocultarlos una vez se pulse el boton.
         if (error.isNotBlank() && !opRes && !dismissed){
             item {AddAlertDialog("Error","error: $error") {viewModel.dismiss();viewModel.clearError()}}
         }else if(msg.isNotBlank() && opRes && !dismissed){
             item {AddAlertDialog("Result","Operación: $screen realizada con exito\nRespuesta: $msg") {viewModel.dismiss();viewModel.clearMsg()}}
         }
+
+
+        //Cada campo de texto y su pequqña label se muestra si son necesarios
 
         if (comps.contains("name")) {
             item{AddPlainText("Nombre de la tarea")}
@@ -68,6 +101,8 @@ fun APITareasOperations(
         }
 
         item {
+
+            //Este boton, dependiendo de la operación solicitada, ejecuita una acción u otra
             AddButton("Proceder") {
                 when (screen) {
                     "insertN" -> viewModel.insertTareaN(TareaAddNDTO(tName, desc), token)
@@ -90,6 +125,7 @@ fun APITareasOperations(
             }
         }
 
+        //Boton que devuelve a la pantalla anterior
         item{AddButton("Volver") {
             navControlador.navigate(AppScreen.APITareas.route)
             viewModel.reset()
