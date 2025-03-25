@@ -78,7 +78,7 @@ fun APIUser(navControlador: NavHostController, modifier: Modifier, viewModel: My
                     AddAlertDialog(
                         "Login result",
                         "Login correcto, bienvenido \"$username\""
-                    ) { viewModel.dismiss(); viewModel.changeLogginResult("") }
+                    ) { viewModel.dismiss(); viewModel.changeLogginResult("");navControlador.navigate(AppScreen.APITareas.route)}
                 }
             } else if (logged == "errorLogin" && !dismissed) {
                 item {
@@ -174,7 +174,7 @@ fun APIUser(navControlador: NavHostController, modifier: Modifier, viewModel: My
                         "Register result",
                         "Registro correcto, bienvenido \"$username\""
                     ) {
-                        viewModel.dismiss();viewModel.changeRegisterResult("")
+                        viewModel.dismiss();viewModel.changeRegisterResult("");navControlador.navigate(AppScreen.APITareas.route)
                     }
                 }
             } else if (registerResult == "Not OK" && !dismissed) {

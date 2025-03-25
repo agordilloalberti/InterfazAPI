@@ -51,7 +51,6 @@ private fun Body(navControlador: NavController, modifier: Modifier, viewModel: M
         }
         Spacer(modifier = Modifier.height(15.dp))
         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
-            AddButton("Gestionar tareas",Modifier.weight(1f)) { navControlador.navigate(AppScreen.APITareas.route) }
             AddButton("Volver",Modifier.weight(1f)) { navControlador.navigate(AppScreen.MainScreen.route) }
         }
     }
