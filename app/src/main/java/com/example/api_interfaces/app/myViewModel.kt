@@ -22,7 +22,7 @@ class MyViewModel : ViewModel() {
     private val _tareas = MutableLiveData<List<TareaDTO>>()
     val tareas :LiveData<List<TareaDTO>> = _tareas
 
-    private fun update(){
+    fun update(){
         viewModelScope.launch {
             try {
                 val response = RetrofitClient.api.getAll(_token.value!!)
@@ -201,7 +201,6 @@ class MyViewModel : ViewModel() {
                     _rol.value = JWT.decode(token.value).getClaim("roles").asString()
                     _token.value  = "bearer ${_token.value}"
                     changeLogginResult("logged")
-                    update()
                 } else {
                     _error.value = response.errorBody()?.string()
                     changeLogginResult("errorLogin")
@@ -267,6 +266,7 @@ class MyViewModel : ViewModel() {
                 if (response.isSuccessful) {
                     _opRes.value=true
                     _msg.value = response.body()?.tarea.toString()
+                    update()
                 } else {
                     _error.value = response.errorBody()?.string()
                     _opRes.value=false
@@ -286,6 +286,7 @@ class MyViewModel : ViewModel() {
                 if (response.isSuccessful) {
                     _opRes.value=true
                     _msg.value = response.body()?.tarea.toString()
+                    update()
                 } else {
                     _error.value = response.errorBody()?.string()
                     _opRes.value=false
@@ -393,6 +394,7 @@ class MyViewModel : ViewModel() {
                 if (response.isSuccessful) {
                     _opRes.value=true
                     _msg.value = response.body()?.tarea.toString()
+                    update()
                 } else {
                     _error.value = response.errorBody()?.string()
                     _opRes.value=false
@@ -412,6 +414,7 @@ class MyViewModel : ViewModel() {
                 if (response.isSuccessful) {
                     _opRes.value=true
                     _msg.value = response.body()?.tarea.toString()
+                    update()
                 } else {
                     _error.value = response.errorBody()?.string()
                     _opRes.value=false
@@ -432,6 +435,7 @@ class MyViewModel : ViewModel() {
                 if (response.isSuccessful) {
                     _opRes.value=true
                     _msg.value = response.body()?.tarea.toString()
+                    update()
                 } else {
                     _error.value = response.errorBody()?.string()
                     _opRes.value=false

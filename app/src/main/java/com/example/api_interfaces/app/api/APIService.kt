@@ -46,7 +46,7 @@ interface APIService {
 
     //GET
 
-    @GET("TareasAdmin/all")
+    @GET("TareasAdmin/getAll")
     suspend fun getAll(
         @Header("Authorization") token: String
     ): Response<List<TareaDTO>>
