@@ -10,6 +10,7 @@ import com.example.api_interfaces.app.api.dtos.Direccion
 import com.example.api_interfaces.app.api.dtos.LoginUsuarioDTO
 import com.example.api_interfaces.app.api.dtos.TareaAddADTO
 import com.example.api_interfaces.app.api.dtos.TareaAddNDTO
+import com.example.api_interfaces.app.api.dtos.TareaDTO
 import com.example.api_interfaces.app.api.dtos.UsuarioRegisterDTO
 import kotlinx.coroutines.launch
 
@@ -17,6 +18,28 @@ import kotlinx.coroutines.launch
  * Clase encargada de almacenar todos los datos del programa
  */
 class MyViewModel : ViewModel() {
+
+    private val _tareas = MutableLiveData<List<TareaDTO>>()
+    val tareas :LiveData<List<TareaDTO>> = _tareas
+
+    private fun update(){
+        viewModelScope.launch {
+            try {
+                val response = RetrofitClient.api.getAll(_token.value!!)
+                if (response.isSuccessful){
+                    _opRes.value=true
+                    _msg.value = response.message()
+                    _tareas.value= response.body()
+                } else {
+                    _error.value = response.errorBody()?.string()
+                    _opRes.value=false
+                }
+            } catch (e: Exception) {
+                _error.value = e.message
+                _opRes.value=false
+            }
+        }
+    }
 
     //El nombre de la tarea
     private val _tName = MutableLiveData<String>()
@@ -178,6 +201,7 @@ class MyViewModel : ViewModel() {
                     _rol.value = JWT.decode(token.value).getClaim("roles").asString()
                     _token.value  = "bearer ${_token.value}"
                     changeLogginResult("logged")
+                    update()
                 } else {
                     _error.value = response.errorBody()?.string()
                     changeLogginResult("errorLogin")

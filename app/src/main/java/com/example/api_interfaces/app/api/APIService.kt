@@ -46,6 +46,11 @@ interface APIService {
 
     //GET
 
+    @GET("TareasAdmin/all")
+    suspend fun getAll(
+        @Header("Authorization") token: String
+    ): Response<List<TareaDTO>>
+
     @GET("Tareas/get")
     suspend fun getN(
         @Header("Authorization") token: String
