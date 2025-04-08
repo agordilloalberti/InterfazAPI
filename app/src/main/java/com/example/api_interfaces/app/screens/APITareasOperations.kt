@@ -1,6 +1,8 @@
 package com.example.api_interfaces.app.screens
 
+import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
@@ -72,9 +74,27 @@ fun APITareasOperations(
         //Los dialogos se muestran si: no hay mensaje, es decir, no se ha relizado la operación, el resultado de la operación,
         //para saber cual mostrar y el dismiss, para ocultarlos una vez se pulse el boton.
         if (error.isNotBlank() && !opRes && !dismissed){
-            item {AddAlertDialog("Error","error: $error") {viewModel.dismiss();viewModel.clearError()}}
+
+            Log.e("ERGBYHUNEDRFUNJRTYUHNJ","ERROR OP ERROR")
+
+            item {AddAlertDialog("Error","error: $error")
+                {
+                    viewModel.dismiss()
+                    viewModel.clearError()
+                }
+            }
         }else if(msg.isNotBlank() && opRes && !dismissed){
-            item {AddAlertDialog("Result","Operación: $screen realizada con exito\nRespuesta: $msg") {viewModel.dismiss();viewModel.clearMsg()}}
+
+            Log.e("ERGBYHUNEDRFUNJRTYUHNJ","RESULTADO")
+
+            item {AddAlertDialog("Result","Operación: $screen realizada con exito\nRespuesta: $msg")
+                {
+                    viewModel.dismiss()
+                    viewModel.clearMsg()
+                    viewModel.resetOP()
+                    navControlador.navigate(AppScreen.APITareas.route)
+                }
+            }
         }
 
 
@@ -101,34 +121,36 @@ fun APITareasOperations(
         }
 
         item {
+            Row {
+                //Este boton, dependiendo de la operación solicitada, ejecuta una acción u otra
+                AddButton("Proceder") {
+                    when (screen) {
+                        "insertN" -> viewModel.insertTareaN(TareaAddNDTO(tName, desc), token)
+                        "insertA" -> viewModel.insertTareaA(
+                            TareaAddADTO(tName, desc, username),
+                            token
+                        )
 
-            //Este boton, dependiendo de la operación solicitada, ejecuita una acción u otra
-            AddButton("Proceder") {
-                when (screen) {
-                    "insertN" -> viewModel.insertTareaN(TareaAddNDTO(tName, desc), token)
-                    "insertA" -> viewModel.insertTareaA(TareaAddADTO(tName, desc, username), token)
-                    "getN" -> viewModel.getTareaN(token)
-                    "getA" -> if (username.isBlank()) {
-                        viewModel.getTareaA(token)
-                    } else {
-                        viewModel.getTareaOtro(token, username)
+                        "updateN" -> viewModel.updateTareaN(
+                            token,
+                            tName,
+                            TareaAddNDTO(tNName, desc)
+                        )
+
+                        "updateA" -> viewModel.updateTareaA(
+                            token,
+                            tName,
+                            TareaAddADTO(tNName, desc, username)
+                        )
                     }
-                    "updateN" -> viewModel.updateTareaN(token, tName, TareaAddNDTO(tNName, desc))
-                    "updateA" -> viewModel.updateTareaA(token, tName, TareaAddADTO(tNName, desc, username))
-                    "completeN" -> viewModel.completeTareaN(token, tName)
-                    "completeA" -> viewModel.completeTareaA(token, tName)
-                    "uncompleteN" -> viewModel.uncompleteTareaN(token, tName)
-                    "uncompleteA" -> viewModel.uncompleteTareaA(token, tName)
-                    "deleteN" -> viewModel.deleteTareaN(token, tName)
-                    "deleteA" -> viewModel.deleteTareaA(token, tName)
+                }
+
+                //Boton que devuelve a la pantalla anterior
+                AddButton("Volver") {
+                    viewModel.resetOP()
+                    navControlador.navigate(AppScreen.APITareas.route)
                 }
             }
         }
-
-        //Boton que devuelve a la pantalla anterior
-        item{AddButton("Volver") {
-            navControlador.navigate(AppScreen.APITareas.route)
-            viewModel.reset()
-        }}
     }
 }

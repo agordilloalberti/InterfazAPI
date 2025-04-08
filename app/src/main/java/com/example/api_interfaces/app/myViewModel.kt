@@ -1,6 +1,5 @@
 package com.example.api_interfaces.app
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -13,6 +12,8 @@ import com.example.api_interfaces.app.api.dtos.TareaAddADTO
 import com.example.api_interfaces.app.api.dtos.TareaAddNDTO
 import com.example.api_interfaces.app.api.dtos.TareaDTO
 import com.example.api_interfaces.app.api.dtos.UsuarioRegisterDTO
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 /**
@@ -31,7 +32,6 @@ class MyViewModel : ViewModel() {
                     _opRes.value=true
                     _msg.value = response.message()
                     _tareas.value= response.body()
-                    Log.e("ESXRDCTFVGYBHUJNMCTGVYBUHNJIMK",_tareas.value.toString())
                 } else {
                     _error.value = response.errorBody()?.string()
                     _opRes.value=false
@@ -196,6 +196,7 @@ class MyViewModel : ViewModel() {
     //Metodo para logear a un usuario
     fun loginUser(username: String, password: String) {
         viewModelScope.launch {
+            _loading.value=true
             try {
                 val response = RetrofitClient.api.login(LoginUsuarioDTO(username, password))
                 if (response.isSuccessful) {
@@ -211,6 +212,7 @@ class MyViewModel : ViewModel() {
                 _error.value = e.message
                 changeLogginResult("error")
             }
+            _loading.value=false
         }
     }
 
@@ -236,6 +238,7 @@ class MyViewModel : ViewModel() {
             rol = "USER"
         )
         viewModelScope.launch {
+            _loading.value=true
             try {
                 val response = RetrofitClient.api.register(usuario)
                 if (response.isSuccessful){
@@ -249,6 +252,7 @@ class MyViewModel : ViewModel() {
                 _error.value = e.message
                 changeRegisterResult("Not OK")
             }
+            _loading.value=false
         }
     }
 
@@ -263,6 +267,7 @@ class MyViewModel : ViewModel() {
     //Metodo para insertar tareas desde usuario normal
     fun insertTareaN(tarea:TareaAddNDTO, token:String){
         viewModelScope.launch {
+            _loading.value=true
             try {
                 val response = RetrofitClient.api.insertN(tarea,token)
                 if (response.isSuccessful) {
@@ -277,12 +282,14 @@ class MyViewModel : ViewModel() {
                 _error.value = e.message
                 _opRes.value=false
             }
+            _loading.value=false
         }
     }
 
     //Metodo para insertar tareas desde usuario administrador
     fun insertTareaA(tarea: TareaAddADTO, token:String){
         viewModelScope.launch {
+            _loading.value=true
             try {
                 val response = RetrofitClient.api.insertA(tarea,token)
                 if (response.isSuccessful) {
@@ -297,100 +304,14 @@ class MyViewModel : ViewModel() {
                 _error.value = e.message
                 _opRes.value=false
             }
+            _loading.value=false
         }
     }
-
-    //Metodo para obtener tareas desde usuario normal
-    fun getTareaN(token: String){
-        viewModelScope.launch {
-            try {
-                val response = RetrofitClient.api.getN(token)
-                if (response.isSuccessful){
-                    val r =response.body()
-                    _opRes.value=true
-                    if (r != null) {
-                        if (r.isNotEmpty()) {
-                            _msg.value = ""
-                            for (s in r) {
-                                _msg.value += s.toString()
-                            }
-                        }else{
-                            _msg.value="No hay tareas"
-                        }
-                    }
-                }else{
-                    _error.value=response.errorBody()?.string()
-                    _opRes.value=false
-                }
-            } catch (e: Exception) {
-                _error.value = e.message
-                _opRes.value=false
-            }
-        }
-    }
-
-    //Metodo para obetener tareas desde usuario administrador
-    fun getTareaOtro(token: String,username: String){
-        viewModelScope.launch {
-            try {
-                val response = RetrofitClient.api.getOther(token,username)
-                if (response.isSuccessful){
-                    val r =response.body()
-                    _opRes.value=true
-                    if (r != null) {
-                        if (r.isNotEmpty()) {
-                            _msg.value = ""
-                            for (s in r) {
-                                _msg.value += s.toString()
-                            }
-                        }else{
-                            _msg.value="No hay tareas"
-                        }
-                    }
-                }else{
-                    _error.value=response.errorBody()?.string()
-                    _opRes.value=false
-                }
-            } catch (e: Exception) {
-                _error.value = e.message
-                _opRes.value=false
-            }
-        }
-    }
-
-    //Metodo para obtenr las tareas del administrador
-    fun getTareaA(token: String){
-        viewModelScope.launch {
-            try {
-                val response = RetrofitClient.api.getSelf(token)
-                if (response.isSuccessful){
-                    val r =response.body()
-                    _opRes.value=true
-                    if (r != null) {
-                        if (r.isNotEmpty()) {
-                            _msg.value = ""
-                            for (s in r) {
-                                _msg.value += s.toString()
-                            }
-                        }else{
-                            _msg.value="No hay tareas"
-                        }
-                    }
-                }else{
-                    _error.value=response.errorBody()?.string()
-                    _opRes.value=false
-                }
-            } catch (e: Exception) {
-                _error.value = e.message
-                _opRes.value=false
-            }
-        }
-    }
-
 
     //Metodo para actualizar tareas desde usuario normal
     fun updateTareaN(token: String,tarea:String,newTarea:TareaAddNDTO){
         viewModelScope.launch {
+            _loading.value=true
             try {
                 val response = RetrofitClient.api.updateN(token,tarea,newTarea)
                 if (response.isSuccessful) {
@@ -405,12 +326,14 @@ class MyViewModel : ViewModel() {
                 _error.value = e.message
                 _opRes.value=false
             }
+            _loading.value=false
         }
     }
 
     //Metodo para actualizar tareas desde usuario administrador
     fun updateTareaA(token: String,tarea:String,newTarea:TareaAddADTO){
         viewModelScope.launch {
+            _loading.value=true
             try {
                 val response = RetrofitClient.api.updateA(token,tarea,newTarea)
                 if (response.isSuccessful) {
@@ -425,6 +348,7 @@ class MyViewModel : ViewModel() {
                 _error.value = e.message
                 _opRes.value=false
             }
+            _loading.value=false
         }
     }
 
@@ -432,6 +356,7 @@ class MyViewModel : ViewModel() {
     //Metodo para completar tareas desde usuario normal
     fun completeTareaN(token: String,tarea: String){
         viewModelScope.launch {
+            _loading.value=true
             try {
                 val response = RetrofitClient.api.completeN(token,tarea)
                 if (response.isSuccessful) {
@@ -446,6 +371,7 @@ class MyViewModel : ViewModel() {
                 _error.value = e.message
                 _opRes.value=false
             }
+            _loading.value=false
         }
     }
 
@@ -453,11 +379,13 @@ class MyViewModel : ViewModel() {
     //Metodo para completar tareas desde usuario administrador
     fun completeTareaA(token: String,tarea: String){
         viewModelScope.launch {
+            _loading.value=true
             try {
                 val response = RetrofitClient.api.completeA(token,tarea)
                 if (response.isSuccessful) {
                     _opRes.value=true
                     _msg.value = response.body()?.tarea.toString()
+                    update()
                 } else {
                     _error.value = response.errorBody()?.string()
                     _opRes.value=false
@@ -466,6 +394,7 @@ class MyViewModel : ViewModel() {
                 _error.value = e.message
                 _opRes.value=false
             }
+            _loading.value=false
         }
     }
 
@@ -473,11 +402,13 @@ class MyViewModel : ViewModel() {
     //Metodo para descompletar tareas desde usuario normal
     fun uncompleteTareaN(token: String,tarea: String){
         viewModelScope.launch {
+            _loading.value=true
             try {
                 val response = RetrofitClient.api.uncompleteN(token,tarea)
                 if (response.isSuccessful) {
                     _opRes.value=true
                     _msg.value = response.body()?.tarea.toString()
+                    update()
                 } else {
                     _error.value = response.errorBody()?.string()
                     _opRes.value=false
@@ -486,6 +417,7 @@ class MyViewModel : ViewModel() {
                 _error.value = e.message
                 _opRes.value=false
             }
+            _loading.value=false
         }
     }
 
@@ -493,11 +425,13 @@ class MyViewModel : ViewModel() {
     //Metodo para descompletar tareas desde usuario administrador
     fun uncompleteTareaA(token: String,tarea: String){
         viewModelScope.launch {
+            _loading.value=true
             try {
                 val response = RetrofitClient.api.uncompleteA(token,tarea)
                 if (response.isSuccessful) {
                     _opRes.value=true
                     _msg.value = response.body()?.tarea.toString()
+                    update()
                 } else {
                     _error.value = response.errorBody()?.string()
                     _opRes.value=false
@@ -506,17 +440,20 @@ class MyViewModel : ViewModel() {
                 _error.value = e.message
                 _opRes.value=false
             }
+            _loading.value=false
         }
     }
 
     //Metodo para borrar  tareas desde usuario normal
     fun deleteTareaN(token: String,tarea: String){
         viewModelScope.launch {
+            _loading.value=true
             try {
                 val response = RetrofitClient.api.deleteN(token,tarea)
                 if (response.isSuccessful) {
                     _opRes.value=true
                     _msg.value = response.body()?.tarea.toString()
+                    update()
                 } else {
                     _error.value = response.errorBody()?.string()
                     _opRes.value=false
@@ -525,17 +462,20 @@ class MyViewModel : ViewModel() {
                 _error.value = e.message
                 _opRes.value=false
             }
+            _loading.value=false
         }
     }
 
     //Metodo para borrar tareas desde usuario administrador
     fun deleteTareaA(token: String,tarea: String){
         viewModelScope.launch {
+            _loading.value=true
             try {
                 val response = RetrofitClient.api.deleteA(token,tarea)
                 if (response.isSuccessful) {
                     _opRes.value=true
                     _msg.value = response.body()?.tarea.toString()
+                    update()
                 } else {
                     _error.value = response.errorBody()?.string()
                     _opRes.value=false
@@ -544,6 +484,7 @@ class MyViewModel : ViewModel() {
                 _error.value = e.message
                 _opRes.value=false
             }
+            _loading.value=false
         }
     }
 
@@ -566,11 +507,8 @@ class MyViewModel : ViewModel() {
         return when (screen) {
             "insertN" -> listOf("name", "descrip")
             "insertA" -> listOf("name", "descrip", "username")
-            "getN" -> listOf("getSelf")
-            "getA" -> listOf("username")
             "updateN" -> listOf("name", "newName", "descrip")
             "updateA" -> listOf("name", "newName", "descrip", "username")
-            "completeN", "completeA", "uncompleteN", "uncompleteA", "deleteN", "deleteA" -> listOf("name")
             else -> emptyList()
         }
     }
@@ -626,5 +564,15 @@ class MyViewModel : ViewModel() {
         _opRes.value = false
         _dismissed.value = false
     }
+
+    fun resetOP() {
+        _tName.value=""
+        _tNName.value=""
+        _desc.value=""
+        _tUsername.value=""
+    }
+
+    private val _loading = MutableStateFlow(false)
+    val loading: StateFlow<Boolean> = _loading
 
 }
