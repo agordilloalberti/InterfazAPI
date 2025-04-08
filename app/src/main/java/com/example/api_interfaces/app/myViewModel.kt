@@ -1,5 +1,6 @@
 package com.example.api_interfaces.app
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -30,6 +31,7 @@ class MyViewModel : ViewModel() {
                     _opRes.value=true
                     _msg.value = response.message()
                     _tareas.value= response.body()
+                    Log.e("ESXRDCTFVGYBHUJNMCTGVYBUHNJIMK",_tareas.value.toString())
                 } else {
                     _error.value = response.errorBody()?.string()
                     _opRes.value=false
