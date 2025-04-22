@@ -1,6 +1,5 @@
 package com.example.api_interfaces.app.screens
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
@@ -9,7 +8,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CircularProgressIndicator
@@ -22,6 +20,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
 import androidx.navigation.NavController
 import com.example.api_interfaces.app.AddAlertDialog
@@ -64,9 +63,13 @@ fun APITareas(navControlador: NavController, modifier: Modifier, viewModel: MyVi
                     ) {navControlador.navigate(AppScreen.APITareasOperations.route);
                         viewModel.changeScreen("insertN") }
                 }
+                AddButton("Cerrar sesión") {
+                    navControlador.navigate(AppScreen.APIMenu.route)
+                    viewModel.reset()
+                    viewModel.resetOP()
+                }
 
                 if (!dismissed) {
-                    Log.e("ERGBYHUNEDRFUNJRTYUHNJ","ERROR APITAREAS")
                     AddAlertDialog(
                         "Advertencia",
                         "No existen tareas para este usuario"
@@ -78,61 +81,53 @@ fun APITareas(navControlador: NavController, modifier: Modifier, viewModel: MyVi
 
                 items(tareas!!) { tarea ->
                     val nombre = tarea.name
-                    val estado = if (tarea.completada) "Descompletar" else "Completar"
+                    val estado = if (tarea.completada) "Incompleta" else "Completada"
+                    val txtBoton = if (tarea.completada) "Descompletar" else "Completar"
                     val user = tarea.usuario
                     val desc = tarea.descripcion
-                    val txt = "Nombre de la tarea:\n\"$nombre\"\n\n" +
-                            "Asignada a:\n\"$user\"\n\n" +
-                            "Descripción:\n\"$desc\"\n\n" +
-                            "Estado:\n$estado"
+                    val txt = "Nombre de la tarea:  \"$nombre\"\n\n" +
+                            "Asignada a:  \"$user\"\n\n" +
+                            "Descripción:  \"$desc\"\n\n" +
+                            "Estado:  $estado"
 
-                    Row(Modifier.fillMaxWidth().border(1.dp,Color.White).padding(1.dp)) {
-                        Text(txt,Modifier.wrapContentSize().weight(2f),Color.White)
-                        Column(Modifier.wrapContentSize().weight(1f)) {
 
-                            AddButton("Editar",Modifier.wrapContentSize().align(Alignment.End)) {
-                                navControlador.navigate(AppScreen.APITareasOperations.route)
-                                viewModel.changeScreen(if (rol == "ROLE_ADMIN") "updateA" else "updateN")
-                            }
-
-                            AddButton("Borrar",Modifier.wrapContentSize().align(Alignment.End)) {
-                                if (rol == "ROLE_ADMIN") {
-                                    run {
-                                        viewModel.deleteTareaA(token, tarea.name)
-                                    }
-                                } else {
-                                    run {
-                                        viewModel.deleteTareaN(token, tarea.name)
-                                    }
+                    Box(
+                        Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 8.dp, vertical = 4.dp) // espacio consistente
+                    ) {
+                        Column (
+                            Modifier
+                                .fillMaxWidth()
+                                .border(1.dp, Color.White)
+                                .padding(8.dp) // espacio interno de la tarjeta
+                        ) {
+                            Text(
+                                txt,
+                                Modifier,
+                                color = Color.White,
+                                fontSize = 14.sp
+                            )
+                            Row(
+                                Modifier
+                            ) {
+                                AddButton("Editar", Modifier, txtSize = 12) {
+                                    navControlador.navigate(AppScreen.APITareasOperations.route)
+                                    viewModel.changeScreen(if (rol == "ROLE_ADMIN") "updateA" else "updateN")
                                 }
-                            }
 
-                            AddButton(estado,Modifier.wrapContentSize().align(Alignment.End)) {
-                                if (tarea.completada) {
-                                    if (rol == "ROLE_ADMIN") {
-                                        run {
-                                            viewModel.uncompleteTareaA(
-                                                token,
-                                                tarea.name)
-                                        }
-                                    } else {
-                                        run {
-                                            viewModel.uncompleteTareaN(
-                                                token,
-                                                tarea.name
-                                            )
-                                        }
-                                    }
-                                } else {
-                                    if (rol == "ROLE_ADMIN") {
-                                        run {
-                                            viewModel.completeTareaA(token, tarea.name)
-                                        }
-                                    } else {
-                                        run {
-                                            viewModel.completeTareaN(token, tarea.name)
-                                        }
+                                AddButton("Borrar", Modifier, txtSize = 12) {
+                                    if (rol == "ROLE_ADMIN") viewModel.deleteTareaA(token, tarea.name)
+                                    else viewModel.deleteTareaN(token, tarea.name)
+                                }
 
+                                AddButton(txtBoton, Modifier, txtSize = 12) {
+                                    if (tarea.completada) {
+                                        if (rol == "ROLE_ADMIN") viewModel.uncompleteTareaA(token, tarea.name)
+                                        else viewModel.uncompleteTareaN(token, tarea.name)
+                                    } else {
+                                        if (rol == "ROLE_ADMIN") viewModel.completeTareaA(token, tarea.name)
+                                        else viewModel.completeTareaN(token, tarea.name)
                                     }
                                 }
                             }
@@ -152,6 +147,8 @@ fun APITareas(navControlador: NavController, modifier: Modifier, viewModel: MyVi
                         }
                         AddButton("Cerrar sesión") {
                             navControlador.navigate(AppScreen.APIMenu.route)
+                            viewModel.reset()
+                            viewModel.resetOP()
                         }
                     }
                 }
@@ -165,6 +162,7 @@ fun APITareas(navControlador: NavController, modifier: Modifier, viewModel: MyVi
                     .zIndex(1f),
                 contentAlignment = Alignment.Center
             ) {
+                Text("Cargando...",color = Color.White)
                 CircularProgressIndicator(color = Color.White)
             }
         }

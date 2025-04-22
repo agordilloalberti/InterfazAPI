@@ -24,6 +24,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.api_interfaces.R
 import com.example.api_interfaces.app.navigation.AppScreen
@@ -107,10 +108,10 @@ fun AddPlainText(text:String,modifier: Modifier =Modifier){
 }
 
 @Composable
-fun AddButton(text:String,modifier: Modifier=Modifier,enabled: Boolean=true,onclick: () -> Unit = {}){
+fun AddButton(text:String,modifier: Modifier=Modifier,enabled: Boolean=true,txtSize: Int = 16,onclick: () -> Unit = {}){
     Button(
         border = BorderStroke(1.dp, colorResource(R.color.app)),
-        modifier = modifier.padding(10.dp),
+        modifier = modifier.padding(5.dp),
         enabled = enabled,
         shape = RectangleShape,
         colors = ButtonDefaults.buttonColors(
@@ -120,7 +121,7 @@ fun AddButton(text:String,modifier: Modifier=Modifier,enabled: Boolean=true,oncl
         onClick = onclick
     )
     {
-        Text(text = text)
+        Text(text, fontSize = txtSize.sp)
     }
 }
 

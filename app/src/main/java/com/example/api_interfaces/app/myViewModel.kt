@@ -529,6 +529,7 @@ class MyViewModel : ViewModel() {
         _tNName.value=""
         _tUsername.value=""
         _desc.value=""
+        _rol.value=""
     }
 
     //Metodo para reiniciar el valor del nombre de la tarea

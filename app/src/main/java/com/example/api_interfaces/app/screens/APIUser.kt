@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -205,6 +206,7 @@ fun APIUser(navControlador: NavHostController, modifier: Modifier, viewModel: My
                     .zIndex(1f),
                 contentAlignment = Alignment.Center
             ) {
+                Text("Cargando...",color = Color.White)
                 CircularProgressIndicator(color = Color.White)
             }
         }
