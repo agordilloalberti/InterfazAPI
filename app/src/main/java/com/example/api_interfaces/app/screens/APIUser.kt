@@ -25,7 +25,7 @@ import com.example.api_interfaces.app.AddPlainText
 import com.example.api_interfaces.app.AddTextField
 import com.example.api_interfaces.app.MyViewModel
 import com.example.api_interfaces.app.navigation.AppScreen
-
+//TODO REMOVE THE GEO API VALIDATION
 //Valores 100% validos para el registro
 //PUERTO DE SANTA MARÍA (EL)
 //CÁDIZ
