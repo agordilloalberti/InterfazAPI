@@ -47,33 +47,35 @@ fun APITareas(navControlador: NavController, modifier: Modifier, viewModel: MyVi
 
         if (tareas.isNullOrEmpty()) {
             Box(Modifier.fillMaxSize()) {
-                if (rol == "ROLE_ADMIN") {
-                    AddButton(
-                        "Añadir tarea",
-                        Modifier.align(Alignment.Center)
-                    ) {
-                        navControlador.navigate(AppScreen.APITareasOperations.route);viewModel.changeScreen(
-                        "insertA"
-                    )
+                Row(Modifier.align(Alignment.Center)) {
+                    if (rol == "ROLE_ADMIN") {
+                        AddButton(
+                            "Añadir tarea",
+                        ) {
+                            navControlador.navigate(AppScreen.APITareasOperations.route);viewModel.changeScreen(
+                            "insertA"
+                        )
+                        }
+                    } else {
+                        AddButton(
+                            "Añadir tarea",
+                        ) {
+                            navControlador.navigate(AppScreen.APITareasOperations.route)
+                            viewModel.changeScreen("insertN")
+                        }
                     }
-                } else {
-                    AddButton(
-                        "Añadir tarea",
-                        Modifier.align(Alignment.Center)
-                    ) {navControlador.navigate(AppScreen.APITareasOperations.route);
-                        viewModel.changeScreen("insertN") }
-                }
-                AddButton("Cerrar sesión") {
-                    navControlador.navigate(AppScreen.APIMenu.route)
-                    viewModel.reset()
-                    viewModel.resetOP()
-                }
+                    AddButton("Cerrar sesión") {
+                        navControlador.navigate(AppScreen.APIMenu.route)
+                        viewModel.reset()
+                        viewModel.resetOP()
+                    }
 
-                if (!dismissed) {
-                    AddAlertDialog(
-                        "Advertencia",
-                        "No existen tareas para este usuario"
-                    ) { viewModel.dismiss() }
+                    if (!dismissed) {
+                        AddAlertDialog(
+                            "Advertencia",
+                            "No existen tareas para este usuario"
+                        ) { viewModel.dismiss() }
+                    }
                 }
             }
         } else {
