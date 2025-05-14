@@ -1,6 +1,5 @@
 package com.example.api_interfaces.app.screens
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -71,12 +70,14 @@ fun APITareasOperations(
         .background(Color.Black)) {
         item { AddPlainText("Operación: $screen")}
 
+        item {
+            AddPlainText("DEBUG: error='$error' msg='$msg' opRes=$opRes dismissed=$dismissed")
+        }
+
+
         //Los dialogos se muestran si: no hay mensaje, es decir, no se ha relizado la operación, el resultado de la operación,
         //para saber cual mostrar y el dismiss, para ocultarlos una vez se pulse el boton.
         if (error.isNotBlank() && !opRes && !dismissed){
-
-            Log.e("ERGBYHUNEDRFUNJRTYUHNJ","ERROR OP ERROR")
-
             item {AddAlertDialog("Error","error: $error")
                 {
                     viewModel.dismiss()
@@ -85,9 +86,8 @@ fun APITareasOperations(
             }
         }else if(msg.isNotBlank() && opRes && !dismissed){
 
-            Log.e("ERGBYHUNEDRFUNJRTYUHNJ","RESULTADO")
-
-            item {AddAlertDialog("Result","Operación: $screen realizada con exito\nRespuesta: $msg")
+            item {
+                AddAlertDialog("Result","Operación: $screen realizada con exito\nRespuesta: $msg")
                 {
                     viewModel.dismiss()
                     viewModel.clearMsg()
@@ -98,7 +98,7 @@ fun APITareasOperations(
         }
 
 
-        //Cada campo de texto y su pequqña label se muestra si son necesarios
+        //Cada campo de texto y su pequeña label se muestra si son necesarios
 
         if (comps.contains("name")) {
             item{AddPlainText("Nombre de la tarea")}

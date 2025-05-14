@@ -33,6 +33,7 @@ fun APITareas(navControlador: NavController, modifier: Modifier, viewModel: MyVi
 
     viewModel.update()
 
+    val usuario by viewModel.username.observeAsState("")
     val token by viewModel.token.observeAsState("")
     val rol by viewModel.rol.observeAsState("")
     val dismissed by viewModel.dismissed.observeAsState(false)
@@ -52,9 +53,9 @@ fun APITareas(navControlador: NavController, modifier: Modifier, viewModel: MyVi
                         AddButton(
                             "Añadir tarea",
                         ) {
-                            navControlador.navigate(AppScreen.APITareasOperations.route);viewModel.changeScreen(
-                            "insertA"
-                        )
+                            navControlador.navigate(AppScreen.APITareasOperations.route)
+                            viewModel.changeScreen("insertA")
+                            viewModel.clearMsg()
                         }
                     } else {
                         AddButton(
@@ -62,18 +63,21 @@ fun APITareas(navControlador: NavController, modifier: Modifier, viewModel: MyVi
                         ) {
                             navControlador.navigate(AppScreen.APITareasOperations.route)
                             viewModel.changeScreen("insertN")
+                            viewModel.clearMsg()
                         }
                     }
                     AddButton("Cerrar sesión") {
                         navControlador.navigate(AppScreen.APIMenu.route)
                         viewModel.reset()
                         viewModel.resetOP()
+                        viewModel.clearMsg()
+                        viewModel.clearError()
                     }
 
                     if (!dismissed) {
                         AddAlertDialog(
                             "Advertencia",
-                            "No existen tareas para este usuario"
+                            "No existen tareas"
                         ) { viewModel.dismiss() }
                     }
                 }
@@ -82,54 +86,67 @@ fun APITareas(navControlador: NavController, modifier: Modifier, viewModel: MyVi
             LazyColumn(modifier.fillMaxSize().background(Color.Black)) {
 
                 items(tareas!!) { tarea ->
-                    val nombre = tarea.name
-                    val estado = if (tarea.completada) "Incompleta" else "Completada"
-                    val txtBoton = if (tarea.completada) "Descompletar" else "Completar"
-                    val user = tarea.usuario
-                    val desc = tarea.descripcion
-                    val txt = "Nombre de la tarea:  \"$nombre\"\n\n" +
-                            "Asignada a:  \"$user\"\n\n" +
-                            "Descripción:  \"$desc\"\n\n" +
-                            "Estado:  $estado"
+                    if (rol == "ROLE_ADMIN" || tarea.usuario == usuario) {
+                        val nombre = tarea.name
+                        val estado = if (!tarea.completada) "Incompleta" else "Completada"
+                        val txtBoton = if (tarea.completada) "Descompletar" else "Completar"
+                        val user = tarea.usuario
+                        val desc = tarea.descripcion
+                        val txt = "Nombre de la tarea:  \"$nombre\"\n\n" +
+                                "Asignada a:  \"$user\"\n\n" +
+                                "Descripción:  \"$desc\"\n\n" +
+                                "Estado:  $estado"
 
 
-                    Box(
-                        Modifier
-                            .fillMaxWidth()
-                            .padding(horizontal = 8.dp, vertical = 4.dp) // espacio consistente
-                    ) {
-                        Column (
+
+                        Box(
                             Modifier
                                 .fillMaxWidth()
-                                .border(1.dp, Color.White)
-                                .padding(8.dp) // espacio interno de la tarjeta
+                                .padding(horizontal = 8.dp, vertical = 4.dp)
                         ) {
-                            Text(
-                                txt,
-                                Modifier,
-                                color = Color.White,
-                                fontSize = 14.sp
-                            )
-                            Row(
+                            Column(
                                 Modifier
+                                    .fillMaxWidth()
+                                    .border(1.dp, Color.White)
+                                    .padding(8.dp)
                             ) {
-                                AddButton("Editar", Modifier, txtSize = 12) {
-                                    navControlador.navigate(AppScreen.APITareasOperations.route)
-                                    viewModel.changeScreen(if (rol == "ROLE_ADMIN") "updateA" else "updateN")
-                                }
+                                Text(
+                                    txt,
+                                    Modifier,
+                                    color = Color.White,
+                                    fontSize = 14.sp
+                                )
+                                Row(
+                                    Modifier
+                                ) {
+                                    AddButton("Editar", Modifier, txtSize = 12) {
+                                        navControlador.navigate(AppScreen.APITareasOperations.route)
+                                        viewModel.changeTName(nombre)
+                                        viewModel.changeScreen(if (rol == "ROLE_ADMIN") "updateA" else "updateN")
+                                    }
 
-                                AddButton("Borrar", Modifier, txtSize = 12) {
-                                    if (rol == "ROLE_ADMIN") viewModel.deleteTareaA(token, tarea.name)
-                                    else viewModel.deleteTareaN(token, tarea.name)
-                                }
+                                    AddButton("Borrar", Modifier, txtSize = 12) {
+                                        if (rol == "ROLE_ADMIN") viewModel.deleteTareaA(
+                                            token,
+                                            tarea.name
+                                        )
+                                        else viewModel.deleteTareaN(token, tarea.name)
+                                    }
 
-                                AddButton(txtBoton, Modifier, txtSize = 12) {
-                                    if (tarea.completada) {
-                                        if (rol == "ROLE_ADMIN") viewModel.uncompleteTareaA(token, tarea.name)
-                                        else viewModel.uncompleteTareaN(token, tarea.name)
-                                    } else {
-                                        if (rol == "ROLE_ADMIN") viewModel.completeTareaA(token, tarea.name)
-                                        else viewModel.completeTareaN(token, tarea.name)
+                                    AddButton(txtBoton, Modifier, txtSize = 12) {
+                                        if (tarea.completada) {
+                                            if (rol == "ROLE_ADMIN") viewModel.uncompleteTareaA(
+                                                token,
+                                                tarea.name
+                                            )
+                                            else viewModel.uncompleteTareaN(token, tarea.name)
+                                        } else {
+                                            if (rol == "ROLE_ADMIN") viewModel.completeTareaA(
+                                                token,
+                                                tarea.name
+                                            )
+                                            else viewModel.completeTareaN(token, tarea.name)
+                                        }
                                     }
                                 }
                             }
@@ -140,17 +157,17 @@ fun APITareas(navControlador: NavController, modifier: Modifier, viewModel: MyVi
                 item {
                     Row(modifier = Modifier.fillMaxWidth()) {
                         AddButton("Añadir tarea") {
-                            navControlador.navigate(AppScreen.APITareasOperations.route)
                             if (rol == "ROLE_ADMIN") {
                                 viewModel.changeScreen("insertA")
                             }else{
                                 viewModel.changeScreen("insertN")
                             }
+                            navControlador.navigate(AppScreen.APITareasOperations.route)
                         }
                         AddButton("Cerrar sesión") {
-                            navControlador.navigate(AppScreen.APIMenu.route)
                             viewModel.reset()
                             viewModel.resetOP()
+                            navControlador.navigate(AppScreen.APIMenu.route)
                         }
                     }
                 }

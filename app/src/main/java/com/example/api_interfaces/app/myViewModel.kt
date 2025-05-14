@@ -27,10 +27,14 @@ class MyViewModel : ViewModel() {
     fun update(){
         viewModelScope.launch {
             try {
-                val response = RetrofitClient.api.getAll(_token.value!!)
+
+                val response= if (_rol.value=="ROLE_ADMIN") {
+                    RetrofitClient.api.getAll(_token.value!!)
+                }else{
+                    RetrofitClient.api.getN(_token.value!!)
+                }
+
                 if (response.isSuccessful){
-                    _opRes.value=true
-                    _msg.value = response.message()
                     _tareas.value= response.body()
                 } else {
                     _error.value = response.errorBody()?.string()
@@ -169,7 +173,7 @@ class MyViewModel : ViewModel() {
     //Metodo para cambiar el estado del login
     fun changeLogginResult(result: String) {
         _loginResult.value=result
-        _dismissed.value = true
+//        _dismissed.value = true
         _dismissed.value = false
     }
 
@@ -247,12 +251,13 @@ class MyViewModel : ViewModel() {
                 }else{
                     _error.value = response.errorBody()?.string()
                     changeRegisterResult("Not OK")
+                    _loading.value=false
                 }
             }catch (e:Exception){
                 _error.value = e.message
                 changeRegisterResult("Not OK")
+                _loading.value=false
             }
-            _loading.value=false
         }
     }
 
@@ -272,7 +277,7 @@ class MyViewModel : ViewModel() {
                 val response = RetrofitClient.api.insertN(tarea,token)
                 if (response.isSuccessful) {
                     _opRes.value=true
-                    _msg.value = response.body()?.tarea.toString()
+                    _msg.value = "Tarea creada"
                     update()
                 } else {
                     _error.value = response.errorBody()?.string()
@@ -294,7 +299,7 @@ class MyViewModel : ViewModel() {
                 val response = RetrofitClient.api.insertA(tarea,token)
                 if (response.isSuccessful) {
                     _opRes.value=true
-                    _msg.value = response.body()?.tarea.toString()
+                    _msg.value = "Tarea creada"
                     update()
                 } else {
                     _error.value = response.errorBody()?.string()
@@ -316,7 +321,7 @@ class MyViewModel : ViewModel() {
                 val response = RetrofitClient.api.updateN(token,tarea,newTarea)
                 if (response.isSuccessful) {
                     _opRes.value=true
-                    _msg.value = response.body()?.tarea.toString()
+                    _msg.value = "Tarea actualizada"
                     update()
                 } else {
                     _error.value = response.errorBody()?.string()
@@ -338,7 +343,7 @@ class MyViewModel : ViewModel() {
                 val response = RetrofitClient.api.updateA(token,tarea,newTarea)
                 if (response.isSuccessful) {
                     _opRes.value=true
-                    _msg.value = response.body()?.tarea.toString()
+                    _msg.value = "Tarea actualizada"
                     update()
                 } else {
                     _error.value = response.errorBody()?.string()
@@ -507,8 +512,8 @@ class MyViewModel : ViewModel() {
         return when (screen) {
             "insertN" -> listOf("name", "descrip")
             "insertA" -> listOf("name", "descrip", "username")
-            "updateN" -> listOf("name", "newName", "descrip")
-            "updateA" -> listOf("name", "newName", "descrip", "username")
+            "updateN" -> listOf("newName", "descrip")
+            "updateA" -> listOf("newName", "descrip", "username")
             else -> emptyList()
         }
     }
@@ -530,6 +535,7 @@ class MyViewModel : ViewModel() {
         _tUsername.value=""
         _desc.value=""
         _rol.value=""
+        _token.value=""
     }
 
     //Metodo para reiniciar el valor del nombre de la tarea
